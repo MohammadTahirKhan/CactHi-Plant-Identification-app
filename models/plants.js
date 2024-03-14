@@ -5,6 +5,7 @@ let PlantSchema = new Schema({
     name                    : {type: String, required: true},
     identification_complete : {type: Boolean, required: true, default: false},
     user                    : {type: String, required: true},
+    chat                    : {type: String, required: false},
     description             : {type: String, required: true},
     image                   : {type: String, required: true},
     latitude                : {type: String, required: true},
