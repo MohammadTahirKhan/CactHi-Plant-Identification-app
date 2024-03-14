@@ -1,11 +1,21 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+<body>
+<h1><%= title %></h1>
+
+<% data.forEach(plant => { %>
+  <p><strong>Name:</strong> <%= plant.name%></p>
+  <p><strong>Height</strong> <%= plant.height %></p>
+
+  <hr>
+<% }); %>
+<hr>
+</body>
+
+
 </html>
+

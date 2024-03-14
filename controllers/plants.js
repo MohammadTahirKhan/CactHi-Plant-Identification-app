@@ -10,3 +10,15 @@ exports.create = (plantData) => {
         return null;
     });
 }
+
+exports.getAll = function () {
+    return plantModel.find({}).then(plants => {
+        return JSON.stringify(plants);
+    }).catch(err => {
+        // Log the error if retrieval fails
+        console.log(err);
+
+        // Return null in case of an error
+        return null;
+    });
+};
