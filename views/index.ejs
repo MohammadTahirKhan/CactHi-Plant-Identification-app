@@ -2,18 +2,44 @@
 <html>
 <head>
   <title><%= title %></title>
-  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script src="/javascripts/index.js"></script>
 </head>
-<body>
 <h1><%= title %></h1>
 
+<!-- CHANGE THIS WHEN THE USER HAS A REAL USERNAME !!!!!!! -->
+<label for="name">Enter Name:</label>
+<input type="text" id="name" name="name"><br><br>
+<body onload="init()">
+
+<div id="plant_list">
 <% data.forEach(plant => { %>
   <p><strong>Name:</strong> <%= plant.name%></p>
   <p><strong>Height</strong> <%= plant.height %></p>
+    <button id="connect" onclick="connectToRoom('<%= plant._id%>')">Connect</button>
 
   <hr>
 <% }); %>
 <hr>
+</div>
+
+
+
+<div id="chat_interface" style="display: none">
+  <div>
+    <div id="who_you_are" style="display: inline"></div>, you are in room: <div id="in_room" style="display: inline"></div>
+  </div>
+  <div id="history" class="boxed"></div>
+  <div id="input" class="bottom boxed">
+    <form onsubmit="return false;" style="width: 100%">
+      <p>
+
+        <input type="text" id="chat_input" name="chat_input" style="width: 80%">
+        <button id="chat_send" onclick="sendChatText()">Send</button>
+      </p>
+    </form>
+  </div>
+</div>
 </body>
 
 
