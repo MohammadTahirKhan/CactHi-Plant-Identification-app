@@ -16,6 +16,12 @@ router.get('/', function (req, res, next) {
 
 });
 
+router.post('/changeChat', function (req, res, next) {
 
+  res.redirect('/');
+  console.log(req);
+  console.log("X");
+
+});
 
 module.exports = router;

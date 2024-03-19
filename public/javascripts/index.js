@@ -3,6 +3,7 @@ let roomNo = null;
 let socket = io();
 
 
+
 /**
  * called by <body onload>
  * it initialises the interface and the expected socket messages
@@ -36,10 +37,6 @@ function init() {
  * This is a simplification. A real world implementation would ask the server to generate a unique room number
  * so to make sure that the room number is not accidentally repeated across uses
  */
-function generateRoom() {
-    roomNo = Math.round(Math.random() * 10000);
-    document.getElementById('roomNo').value = 'R' + roomNo;
-}
 
 /**
  * called when the Send button is pressed. It gets the text to send from the interface
@@ -47,6 +44,7 @@ function generateRoom() {
  */
 function sendChatText() {
     let chatText = document.getElementById('chat_input').value;
+    let roomNo = document.getElementById('roomNo').value;
     socket.emit('chat', roomNo, name, chatText);
 }
 
@@ -54,10 +52,19 @@ function sendChatText() {
  * used to connect to a room. It gets the user name and room number from the
  * interface
  */
-function connectToRoom(roomNo) {
+function connectToRoom(roomNo, history) {
+    document.getElementById('roomNo').value = roomNo;
     name = document.getElementById('name').value;
+
     if (!name) name = 'Unknown-' + Math.random();
     socket.emit('create or join', roomNo, name);
+
+    let historyElement = document.getElementById('history');
+    let paragraph = document.createElement('p');
+    console.log(history);
+    paragraph.innerHTML = history;
+    historyElement.appendChild(paragraph);
+
 }
 
 /**
@@ -67,9 +74,14 @@ function connectToRoom(roomNo) {
 function writeOnHistory(text) {
     let history = document.getElementById('history');
     let paragraph = document.createElement('p');
+    roomNo = document.getElementById('roomNo').value;
+
     paragraph.innerHTML = text;
     history.appendChild(paragraph);
     document.getElementById('chat_input').value = '';
+
+    console.log(roomNo,'chat',history);
+
 }
 
 /**
@@ -82,5 +94,23 @@ function hideLoginInterface(room, userId) {
     document.getElementById('chat_interface').style.display = 'block';
     document.getElementById('who_you_are').innerHTML= userId;
     document.getElementById('in_room').innerHTML= ' '+room;
+    document.getElementById('BackButton').style.display = 'block';
 }
+
+function showLogInterface(room, userId) {
+    document.getElementById('plant_list').style.display = 'block';
+    document.getElementById('chat_interface').style.display = 'none';
+    document.getElementById('who_you_are').innerHTML= '';
+    document.getElementById('in_room').innerHTML= '';
+    document.getElementById('roomNo').value= '';
+    document.getElementById('BackButton').style.display = 'none';
+
+    var form = document.createElement('form');
+    form.setAttribute('method', 'post');
+    form.setAttribute('action', '/changeChat');
+    form.style.display = 'hidden';
+    document.body.appendChild(form)
+    form.submit();
+}
+
 

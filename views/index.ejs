@@ -8,15 +8,21 @@
 <h1><%= title %></h1>
 
 <!-- CHANGE THIS WHEN THE USER HAS A REAL USERNAME !!!!!!! -->
+
+
 <label for="name">Enter Name:</label>
 <input type="text" id="name" name="name"><br><br>
+<label for="roomNo">RoomNo:</label>
+<input type="text" id="roomNo" name="roomNo"><br><br>
 <body onload="init()">
 
+
+<p id="roomNo">Room ID</p>
 <div id="plant_list">
 <% data.forEach(plant => { %>
   <p><strong>Name:</strong> <%= plant.name%></p>
   <p><strong>Height</strong> <%= plant.height %></p>
-    <button id="connect" onclick="connectToRoom('<%= plant._id%>')">Connect</button>
+    <button id="connect" onclick="connectToRoom('<%= plant._id%>','<%= plant.chat%>')">Connect</button>
 
   <hr>
 <% }); %>
@@ -41,6 +47,9 @@
   </div>
 </div>
 </body>
+
+<button id="BackButton" style="display: none" onclick="showLogInterface()"> BACK</button>
+
 
 
 </html>

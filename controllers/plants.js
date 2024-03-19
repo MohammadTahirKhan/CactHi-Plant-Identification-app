@@ -22,3 +22,22 @@ exports.getAll = function () {
         return null;
     });
 };
+
+exports.updateField = function (plantId, fieldToUpdate, updatedValue) {
+    return plantModel.findByIdAndUpdate(plantId, { [fieldToUpdate]: updatedValue }, { new: true }).then(updatedPlant => {
+        if (!updatedPlant) {
+            return null;
+        }
+
+        console.log('Updated plant:', updatedPlant);
+
+        // Return the updated student as a JSON string
+        return JSON.stringify(updatedPlant);
+    }).catch(err => {
+        // Log the error if update fails
+        console.error('Error updating history field:', err);
+
+        // Return null in case of an error
+        return null;
+    });
+};
