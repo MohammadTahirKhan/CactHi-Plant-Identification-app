@@ -2,7 +2,8 @@ let name = null;
 let roomNo = null;
 let socket = io();
 
-
+const seperate_chats = "||";
+const seperate_names = "|";
 
 /**
  * called by <body onload>
@@ -17,7 +18,7 @@ function init() {
     socket.on('joined', function (room, userId) {
         if (userId === name) {
             // it enters the chat
-            hideLoginInterface(room, userId);
+            hidePlantList(room, userId);
         } else {
             // notifies that someone has joined the room
             writeOnHistory('<b>'+userId+'</b>' + ' joined room ' + room);
@@ -45,6 +46,8 @@ function init() {
 function sendChatText() {
     let chatText = document.getElementById('chat_input').value;
     let roomNo = document.getElementById('roomNo').value;
+    let chatHistory = document.getElementById('historyChat')
+    chatHistory.value = roomNo + "$$" + chatHistory.value + '||' + name +'|' +chatText;
     socket.emit('chat', roomNo, name, chatText);
 }
 
@@ -61,9 +64,20 @@ function connectToRoom(roomNo, history) {
 
     let historyElement = document.getElementById('history');
     let paragraph = document.createElement('p');
-    console.log(history);
-    paragraph.innerHTML = history;
-    historyElement.appendChild(paragraph);
+    const split_text = history.split(seperate_chats);
+
+    for (let i = 0; i < split_text.length; i++) {
+        let name = split_text[i].split(seperate_names)[0]
+        let chat = split_text[i].split(seperate_names)[1]
+        writeOnHistory('<b>' + name + ':</b> ' + chat);
+
+    }
+
+    let chatHistory = document.getElementById('historyChat')
+    chatHistory.value = history;
+
+    console.log(split_text);
+    console.log("X");
 
 }
 
@@ -89,28 +103,16 @@ function writeOnHistory(text) {
  * @param room the selected room
  * @param userId the user name
  */
-function hideLoginInterface(room, userId) {
+function hidePlantList(room, userId) {
+    document.getElementById('name').style.display = 'none';
+    document.getElementById('nameLabel').style.display = 'none';
     document.getElementById('plant_list').style.display = 'none';
     document.getElementById('chat_interface').style.display = 'block';
     document.getElementById('who_you_are').innerHTML= userId;
     document.getElementById('in_room').innerHTML= ' '+room;
     document.getElementById('BackButton').style.display = 'block';
+    document.getElementById('BackButton').style.display = 'block;'
 }
 
-function showLogInterface(room, userId) {
-    document.getElementById('plant_list').style.display = 'block';
-    document.getElementById('chat_interface').style.display = 'none';
-    document.getElementById('who_you_are').innerHTML= '';
-    document.getElementById('in_room').innerHTML= '';
-    document.getElementById('roomNo').value= '';
-    document.getElementById('BackButton').style.display = 'none';
-
-    var form = document.createElement('form');
-    form.setAttribute('method', 'post');
-    form.setAttribute('action', '/changeChat');
-    form.style.display = 'hidden';
-    document.body.appendChild(form)
-    form.submit();
-}
 
 

@@ -10,10 +10,10 @@
 <!-- CHANGE THIS WHEN THE USER HAS A REAL USERNAME !!!!!!! -->
 
 
-<label for="name">Enter Name:</label>
+<label for="name" id="nameLabel">Enter Name:</label>
 <input type="text" id="name" name="name"><br><br>
-<label for="roomNo">RoomNo:</label>
-<input type="text" id="roomNo" name="roomNo"><br><br>
+<label for="roomNo" style="display: none">RoomNo:</label>
+<input type="text" id="roomNo" name="roomNo" style="display: none"><br><br>
 <body onload="init()">
 
 
@@ -46,10 +46,15 @@
     </form>
   </div>
 </div>
+
+
+<form action="/changeChat" method="POST" enctype="application/x-www-form-urlencoded">
+  <input type="text" id="historyChat" name="historyChat" style="display: none">
+  <button id="BackButton" type="submit" style="display: none">Back</button>
+</form>
+
+
 </body>
-
-<button id="BackButton" style="display: none" onclick="showLogInterface()"> BACK</button>
-
 
 
 </html>
