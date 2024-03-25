@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">.
+
+<nav class="navbar navbar-expand-lg bg-body" >
+    <div class="container-fluid">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <a href="#" class="navbar-brand">
+                <img src="/images/yuh.png" width="40" alt="" class="d-inline-block">
+            </a>
+            <li class="nav-item ">
+                <a class="nav-link" aria-current="page" href="../">Home</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#">New Plant</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">View Plants</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">My Submissions</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<body style="padding: 25px">
+<div class="card" style="padding: 25px;">
+
+    <h1>Upload New Plant:</h1>
+    <form action="new-plant-sighting" method="post">
+        <div style=" padding: 25px;  margin: 1%;" class="card">
+
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="username"><b>Username</b></label>
+                <input type="text" readonly class="form-control" value="sample_user"  placeholder="Enter Username" name="username" required>
+            </div>
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="date"><b>Date of Sighting</b></label>
+                <input type="text"  class="form-control"  placeholder="Enter Date" name="date" required>
+            </div>
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="time"><b>Time of Sighting</b></label>
+                <input type="text"  class="form-control"  placeholder="Enter Time" name="time" required>
+            </div>
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="latitude"><b>Approximate Latitude</b></label>
+                <input type="text"  class="form-control"  placeholder="Enter latitude" name="lat" required>
+            </div>
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="longitude"><b>Approximate Longitude</b></label>
+                <input type="text"  class="form-control" placeholder="Enter longitude" name="lat" required>
+            </div>
+
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="description"><b>Description</b></label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Describe any features of the plant you noticed that might help people identify it!" rows="3"></textarea>
+            </div>
+        </div>
+        <div style=" padding: 25px; margin: 1%;" class="card">
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="height"><b>How tall was the plant?</b></label>
+                <select class="form-control" id="height" name="height" required>
+                    <option>0-15cm</option>
+                    <option>15-30cm</option>
+                    <option>30-60cm</option>
+                    <option>60-100cm</option>
+                    <option>100cm+</option>
+
+                </select>
+            </div>
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="spread"><b>What was the spread of the plant?</b></label>
+                <select class="form-control" id="spread" name="spread" required>
+                    <option>0-15cm</option>
+                    <option>15-30cm</option>
+                    <option>30-60cm</option>
+                    <option>60-100cm</option>
+                    <option>100cm+</option>
+
+                </select>
+            </div>
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="flowers"><b>Did the plant have flowers?</b></label>
+                <select class="form-control" id="flowers" name="flowers" required>
+                    <option>Yes</option>
+                    <option>No</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="text"><b>If so, what colour were the flowers?</b></label>
+                <input type="text" class="form-control" placeholder="What colour would you describe the flowers as? " name="colour">
+            </div>
+
+
+
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="leaves"><b>Did the plant have leaves?</b></label>
+                <select class="form-control" id="leaves" name="leaves" required>
+                    <option>Yes</option>
+                    <option>No</option>
+
+                </select>
+            </div>
+
+
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="fruits_or_seeds"><b>Were there visible fruits or seeds?</b></label>
+                <select class="form-control" id="fruits_or_seeds" name="fruits_or_seeds" required>
+                    <option>Yes</option>
+                    <option>No</option>
+
+                </select>
+            </div>
+
+
+            <div class="form-group" style="padding-bottom: 10px">
+                <label for="sun_exp"><b>What was the level of sun exposure in the area?</b></label>
+
+                <select class="form-control" id="sun_exp" name="sun_exp" required>
+                    <option>Full Shade</option>
+                    <option>Partial Shade</option>
+                    <option>Full Sun</option>
+                </select>
+            </div>
+        </div>
+        <div style="padding: 25px; margin: 1%;" class="card">
+
+            <label class="form-label" for="image_of_plant"><b>Photo of plant</b></label>
+            <input type="file" class="form-control" id="image_of_plant" name="image_of_plant"/>
+        </div>
+        <p></p>
+
+        <button type="submit" class="btn btn-success" style=" margin: 1%;">Submit Plant</button>
+    </form></div>
+</body>
+</html>
