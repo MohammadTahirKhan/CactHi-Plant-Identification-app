@@ -21,7 +21,7 @@ let PlantSchema = new Schema({
     last_checked            : {type: Date, required: true, default: Date.now}
 });
 
-PlantSchema.set('toObject', { 
+PlantSchema.set('toObject', {
     getters: true,
     virtuals: true
 });
