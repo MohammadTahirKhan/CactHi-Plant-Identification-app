@@ -1,0 +1,78 @@
+<%- include('./partials/header.ejs') %>
+
+<div class="container">
+    <h1 class="mb-4"><%= title %></h1>
+    <div class="row gy-4">
+        <div class="col-lg-6">
+            <div class="card">
+                <img class="card-img-top" src="/images/<%- plant.image %>" alt="Picture of <%- plant.name %>" />
+                <div class="card-body">
+                    <h5 class="card-title"><%= plant.name %></h4>
+                    <h6 class="card-subtitle text-muted mb-2"><%= plant.latitude %>, <%= plant.longitude %></h5>
+                    <p class="card-text"><%= plant.description %></p>
+
+                    <div class="row row-cols-2 row-cols-lg-3 text-center g-2 mb-4">
+                        <div class="col">
+                            <div class="border rounded align-self-center p-2">
+                                <p class="mb-0 text-muted">Height</p>
+                                <p class="mb-0"><%= plant.height %> cm</p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="border rounded align-self-center p-2">
+                                <p class="mb-0 text-muted">Spread</p>
+                                <p class="mb-0"><%= plant.spread %> cm</p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="border rounded align-self-center p-2">
+                                <p class="mb-0 text-muted">Flower Colour</p>
+                                <p class="mb-0"><%= plant.flower_colour %></p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="border rounded align-self-center p-2">
+                                <p class="mb-0 text-muted">Sun Exposure</p>
+                                <p class="mb-0"><%= plant.sun_exposure %></p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="border rounded align-self-center p-2">
+                                <p class="mb-0 text-muted">Seeds or Fruit?</p>
+                                <p class="mb-0"><%= plant.seeds_or_fruit %></p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="border rounded align-self-center p-2">
+                                <p class="mb-0 text-muted">Leaves?</p>
+                                <p class="mb-0"><%= plant.leaves %></p>
+                            </div>
+                        </div>
+                    </div>
+                      
+                    <a href="#" class="btn btn-primary">Suggest Name</a>
+                </div>
+                <div class="card-footer">
+                    <p class="card-text mb-0"><span class="text-muted">Posted by</span> <%= plant.user %></p>
+                    <p class="card-text"><span class="text-muted">On</span> <%= plant.date_time_added %></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <p class="card-text">Chat</p>
+                </div>
+               <!-- chat logic here -->
+        </div>
+    </div>
+</div>
+
+<script src="/javascripts/index.js"></script>
+<script>
+    document.onload = init();
+    document.onload = connectToRoom('<%= plant._id %>', '<%= plant.chat %>')
+</script>
+
+<%- include('./partials/footer.ejs') %>

@@ -1,0 +1,30 @@
+<%- include('./partials/header.ejs') %>
+
+<div class="container">
+    <h1 class="mb-4"><%= title %></h1>
+    <div class="row" data-masonry='{"percentPosition": true }'>
+        <% if (plants.length == 0) { %>
+            <p>There are no plants</p>
+    
+        <% } else { %>
+            <% plants.forEach(plant => { %>
+                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                    <a class="card" href="/view-plants/<%- plant._id %>" style="text-decoration: none;">
+                        <img class="card-img-top img-fluid" src="/images/<%- plant.image %>" alt="Picture of <%- plant.name %>" />
+                        <div class="card-body">
+                            <h4 class="card-title"><%= plant.name %></h4>
+                            <p class="card-text"><%= plant.description %></p>
+                        </div>
+                        <div class="card-footer">
+                            <p class="card-text mb-0"><span class="text-muted">Posted by</span> <%= plant.user %></p>
+                            <p class="card-text"><span class="text-muted">On</span> <%= plant.date_time_added %></p>
+                        </div>
+                    </a>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
+<%- include('./partials/footer.ejs') %>
