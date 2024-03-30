@@ -5,7 +5,7 @@ exports.create = function (plantData, filePath) {
     let plant = new plantModel({
         name: plantData.name,
         identification_complete: plantData.identification_complete,
-        user: plantData.user,
+        user: plantData.username,
         chat: plantData.chat,
         description: plantData.description,
         image: filePath, // Assuming this is the field for image path
@@ -16,16 +16,18 @@ exports.create = function (plantData, filePath) {
         flowers: plantData.flowers,
         flower_colour: plantData.flower_colour,
         leaves: plantData.leaves,
-        seeds_or_fruit: plantData.seeds_or_fruit,
+        fruits_or_seeds: plantData.fruits_or_seeds,
         sun_exposure: plantData.sun_exposure,
         date_time_added: plantData.date_time_added,
-        last_checked: plantData.last_checked
+        last_checked: plantData.last_checked,
+        date_of_sighting: plantData.date,
+        time_of_sighting: plantData.time
     });
 
     // Save the plant to the database and handle success or failure
     return plant.save().then(plant => {
         // Log the created plant
-        console.log(plant);
+        console.log(plant, "aaa");
 
         // Return the plant data as a JSON string
         return JSON.stringify(plant);
