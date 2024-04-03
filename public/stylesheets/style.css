@@ -32,3 +32,21 @@ a {
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 
 }
+img {
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+}
+.bg {
+  /* The image used */
+  background-image: url("/images/landing-background.png");
+
+  /* Full height */
+  height: 100%;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
