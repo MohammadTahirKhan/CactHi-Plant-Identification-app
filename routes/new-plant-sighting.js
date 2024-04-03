@@ -24,12 +24,12 @@ router.get('/',  function(req, res, next) {
     res.render('new-plant-sighting', { title: 'Plant Creation' });
 });
 
-router.post('/',upload.single('myImg'), async function (req, res) {
+router.post('/',upload.single('image_of_plant'), async function (req, res) {
     console.log(req.body.username);
     console.log(req.body["plant_name"]);
     console.log(req.body);
     let plantData = req.body;
-    let filePath = req.path;
+    let filePath = req.file.path;
     let result = await plantsController.create(plantData, filePath);
     console.log(result);
     let all = plants.getAll()

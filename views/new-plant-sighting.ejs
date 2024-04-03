@@ -2,7 +2,7 @@
 <div class="card" style="padding: 25px;">
 
     <h1>Upload New Plant:</h1>
-    <form action="new-plant-sighting" method="post">
+    <form action="new-plant-sighting" method="post" enctype="multipart/form-data">
         <div style=" padding: 25px;  margin: 1%;" class="card">
 
             <div class="form-group" style="padding-bottom: 10px">
@@ -106,7 +106,7 @@
         <div style="padding: 25px; margin: 1%;" class="card">
 
             <label class="form-label" for="image_of_plant"><b>Photo of plant</b></label>
-            <input type="file" class="form-control" id="image_of_plant" name="image_of_plant"/>
+            <input type="file" class="form-control" id="image_of_plant" name="image_of_plant" accept="image/*"/>
         </div>
         <p></p>
 
