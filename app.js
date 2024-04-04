@@ -4,6 +4,7 @@ var path = require('path');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const socketIo = require('socket.io');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -23,6 +24,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(__dirname + '/node_modules/bootstrap/dist'));
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public/images/uploads', express.static(path.join(__dirname, '/public/images/uploads')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

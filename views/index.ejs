@@ -1,41 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title><%= title %></title>
-  <!--
-      <link rel='stylesheet' href='/stylesheets/style.css' />
-  -->
+<%- include('./partials/header.ejs') %>
 
-  <link rel="stylesheet" href="./css/bootstrap.min.css">.
-
-
-  <nav class="navbar navbar-expand-lg bg-body" >
-    <div class="container-fluid">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <a href="#" class="navbar-brand">
-          <img src="/images/yuh.png" width="40" alt="" class="d-inline-block">
-        </a>
-        <li class="nav-item ">
-          <a class="nav-link" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="new-plant-sighting">New Plant</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">View Plants</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">My Submissions</a>
-        </li>
-      </ul>
-    </div>
-  </nav>
-</head>
-<body>
 <h1><%= title %></h1>
 <p>Welcome to <%= title %></p>
 
-<button type="button" class="btn btn-secondary">Secondary</button>
+<label for="name" id="nameLabel">Enter Name:</label>
+<input type="text" id="name" name="name"><br><br>
+<label for="roomNo" style="display: none">RoomNo:</label>
+<input type="text" id="roomNo" name="roomNo" style="display: none"><br><br>
 
-</body>
-</html>
+<p id="roomNo">Room ID</p>
+<div id="plant_list">
+<% data.forEach(plant => { %>
+    <p><strong>Name:</strong> <%= plant.name%></p>
+    <p><strong>Height</strong> <%= plant.height %></p>
+    <button id="connect" onclick="connectToRoom('<%= plant._id%>','<%= plant.chat%>')">Connect</button>
+    <hr>
+    <% }); %>
+    <hr>
+</div>
+
+<%- include('./partials/footer.ejs') %>
