@@ -7,6 +7,24 @@ a.card:hover {
   opacity: 0.85;
 }
 
+.tooltip-button {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-button .tooltip-text {
+  visibility: hidden;
+  position: absolute;
+  text-align: center;
+  top: -0.15rem;
+  right: 105%;
+  z-index: 999;
+}
+
+.tooltip-button:hover .tooltip-text {
+  visibility: visible;
+}
+
 #history p {
   width: -moz-fit-content;
   width: fit-content;
