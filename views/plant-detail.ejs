@@ -71,18 +71,18 @@
                     <% if (!plant.identification_complete) { %>
                         <button id="suggest-name" class="btn btn-secondary">Suggest Name</button>
                         <div class="overlay">
-                            <div class="suggest-name-form card">
+                            <div class="suggest-name-form card" style="width: 25rem; max-width: 95dvw;">
                                 <div class="card-header">
                                     <button id="close-suggest-name" type="button" class="btn-close" aria-label="Close"></button>
                                 </div>
                                 
                                 <!-- FORM FOR SUGGESTING A NEW NAME -->
-                                <form class="card-body" action="">
-                                    <div class="form-floating mb-2">
+                                <form class="card-body" method="post" action="">
+                                    <div class="form-floating mb-3">
                                         <input type="text" class="form-control" name="suggested-name" id="suggested-name" placeholder="e.g. Rose">
-                                        <label for="suggested-name">Suggest a Name</label>
+                                        <label for="suggested-name">Name Suggestion</label>
                                     </div>                                  
-                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                    <button type="submit" class="btn btn-primary w-100">Submit</button>
                                 </form>
                             </div>
                         </div>
