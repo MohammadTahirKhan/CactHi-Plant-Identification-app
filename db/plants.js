@@ -4,7 +4,9 @@ let connection;
 
 mongoose.Promise = global.Promise;
 
-mongoose.connect(mongoDB).then(result => {
+mongoose.connect(mongoDB, {
+    family: 4
+}).then(result => {
     connection = result.connection;
     console.log('Connected to MongoDB');
 }).catch(err => {
