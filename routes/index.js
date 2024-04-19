@@ -52,14 +52,15 @@ router.get('/view-plants/:uid', function(req, res, next) {
   })
 });
 
-router.post('/changeChat', function (req, res, next) {
-  const pushData = req.body.historyChat.split("$$");
-  console.log(pushData[0]);
-  console.log("ABOVE THIS");
-  let result = plants.updateField(pushData[0], 'chat',pushData[1]);
-  console.log(result);
-  res.redirect('/');
+router.post('/changeChat', (req, res, next) => {
+  console.log(req.body);
+  setImmediate(updateChat, req.body.plantID, req.body.historyChat);
+  res.send('Chat update scheduled');
 });
+
+async function updateChat(plantID, historyChat) {
+  await plants.updateField(plantID, 'chat', historyChat);
+}
 
 
 module.exports = router;

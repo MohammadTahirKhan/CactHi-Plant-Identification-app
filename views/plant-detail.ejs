@@ -102,19 +102,20 @@
         </div>
 
         <div class="col">
-            <div class="d-flex flex-column justify-content-between gap-2 p-2 border rounded" style="height: 80dvh;">
-                <div class="d-flex flex-column-reverse overflow-auto">
+            <div class="d-flex flex-column justify-content-between gap-2 border rounded" style="height: 80dvh;">
+                <div class="d-flex flex-column-reverse overflow-auto p-2" style="scrollbar-width: thin;">
                     <div class="flex-grow-1" id="history">
                     </div>
                     <!-- ==== FORM FOR UPLOADING HISTORY WHEN PAGE LEFT -->
-                    <form id="uploadHistory" class="d-none">
+                    <form id="uploadHistory" class="d-none" action="/changeChat" method="post">
+                        <input type="text" name="plantID" id="plantID" value=<%= plant._id %>>
                         <input type="text" id="historyChat" name="historyChat">
                     </form>
                 </div>  
 
                 <div>
                     <!-- FORM FOR SENDING CHAT TEXT -->
-                    <form onsubmit="return false" class="d-flex gap-2">
+                    <form onsubmit="return false" class="d-flex gap-2 p-2">
                         <input type="text" name="chat_input" id="chat_input" placeholder="Send a message" class="form-control" required>
                         <button class="btn btn-primary" onclick="sendChatText()">Send</button>
                     </form>
@@ -132,20 +133,22 @@
     document.getElementById("close-suggest-name").onclick = () => toggleOverlay("none");
 </script>
 
-<script src="/javascripts/index.js"></script>
+<script src="/javascripts/chat.js"></script>
 <script>
-    document.onload = init();
-    document.onload = connectToRoom('<%= plant._id %>', '<%= plant.chat %>');
+    document.onload = connectToRoom('<%= plant.chat %>');
     
-    window.onbeforeunload = () => {
-        const form = document.getElementById("uploadHistory");
-        const formData = new FormData(form);
-        fetch("/changeChat", {
-            method: "POST",
-            body: formData,
-            keepalive: true
+    window.onbeforeunload = function() {
+        const data = JSON.stringify({
+            plantID: '<%= plant._id %>',
+            historyChat: document.getElementById('historyChat').value
         });
-    }
+
+        const blob = new Blob([data], {
+            type: 'application/json'
+        });
+
+        navigator.sendBeacon('/changeChat', blob);
+    };
 </script>
 
 <%- include('./partials/footer.ejs') %>
