@@ -13,14 +13,13 @@ let PlantSchema = new Schema({
     height                  : {type: String, required: true},
     spread                  : {type: String, required: true},
     flowers                 : {type: Boolean, required: true},
-    flower_colour           : {type: String, required: true},
+    flower_colour           : {type: String, required: false},
     leaves                  : {type: Boolean, required: true},
     fruits_or_seeds         : {type: Boolean, required: true},
-    sun_exposure            : {type: String, required: true, enum: ['Full Sun', 'Partial Sun', 'Full Shade']},
+    sun_exposure            : {type: String, required: true, enum: ['Full Sun', 'Partial Shade', 'Full Shade']},
     date_time_added         : {type: Date, required: true, default: Date.now},
     last_checked            : {type: Date, required: true, default: Date.now},
-    date_of_sighting        : {type: Date, required: true, default: Date.now},
-    time_of_sighting        : {type: String},
+    date_time_of_sighting   : {type: Date, required: true}
 });
 
 PlantSchema.set('toObject', {

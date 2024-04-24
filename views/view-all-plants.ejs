@@ -2,16 +2,24 @@
 
 <div class="container">
     <div class="d-flex justify-content-end align-items-center gap-2 mb-4">
-        <p class="mb-0 text-muted">Sort by:</p>
-        <form>
+        <form class="d-flex flex-row gap-2">
             <input type="hidden" name="location" id="location">
-            <select name="sort" id="sort" class="form-select" style="width: fit-content;">
-                <option value="recent">Recently Seen</option>
-                <option value="oldest">Oldest Seen</option>
-                <option value="unidentified">Unidentified</option>
-                <option value="closest">Distance (Closest)</option>
-                <option value="farthest">Distance (Farthest)</option>
-            </select>
+            <div>
+                <p class="mb-1">Filter by:</p>
+                <div class="form-check form-check-inline pt-1">
+                    <label for="my-submissions" class="form-check-label">My Submissions</label>
+                    <input type="checkbox" class="form-check-input" name="mySubmissions" id="my-submissions">
+                </div>
+            </div>
+            <label for="sort">Sort by:
+                <select name="sort" id="sort" class="form-select" style="width: fit-content;">
+                    <option value="recent">Recently Seen</option>
+                    <option value="oldest">Oldest Seen</option>
+                    <option value="unidentified">Unidentified</option>
+                    <option value="closest">Distance (Closest)</option>
+                    <option value="farthest">Distance (Farthest)</option>
+                </select>
+            </label>
         </form>
     </div>
 
@@ -42,10 +50,10 @@
                         <div class="card-footer">
                             <p class="card-text mb-0"><span class="text-muted">Posted by</span> <%= plant.user %></p>
                             <p class="card-text">
-                                <span class="text-muted">On</span>
-                                <%= new Date(plant.date_time_added).toLocaleDateString() %>
+                                <span class="text-muted">Plant seen on</span>
+                                <%= new Date(plant.date_time_of_sighting).toLocaleDateString() %>
                                 <span class="text-muted">at</span>
-                                <%= new Date(plant.date_time_added).toLocaleTimeString() %>
+                                <%= new Date(plant.date_time_of_sighting).toLocaleTimeString() %>
                             </p>
                         </div>
                     </a>
@@ -60,9 +68,15 @@
     sort.addEventListener('change', () => {
         sort.form.submit();
     });
-    // set the selected option to the current sort value
     if ('<%= sort %>' !== '')
         sort.value = '<%= sort %>';
+
+    const mySubmissions = document.getElementById('my-submissions');
+    mySubmissions.addEventListener('change', () => {
+        mySubmissions.form.submit();
+    });
+    if ('<%= mySubmissions %>' !== '')
+        mySubmissions.checked = true;
 
     // set the location value to the current location value
     const locationInput = document.getElementById('location');
