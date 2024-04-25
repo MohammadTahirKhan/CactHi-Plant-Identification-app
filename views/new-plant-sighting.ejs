@@ -1,112 +1,131 @@
 <%- include('./partials/header.ejs') %>
-<div class="card" style="padding: 25px;">
+<div class="container">
+    <h1 class="mb-2">Create New Plant</h1>
+    <div class="card">
+        <div class="card-body">
+            <form action="new-plant-sighting" method="post" enctype="multipart/form-data">
+                <div class="mb-2">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" name="username" id="username" class="form-control" required>
+                </div>
 
-    <h1>Upload New Plant:</h1>
-    <form action="new-plant-sighting" method="post" enctype="multipart/form-data">
-        <div style=" padding: 25px;  margin: 1%;" class="card">
+                <div class="mb-2">
+                    <label for="name" class="form-label">Name of Plant</label>
+                    <input type="text" name="name" id="name" class="form-control" required>
+                </div>
 
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="username"><b>Username</b></label>
-                <input type="text" readonly class="form-control" value="sample_user"  placeholder="Enter username" name="username" required>
-            </div>
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="name"><b>Name of plant</b></label>
-                <input type="text" class="form-control" placeholder="Enter Name" name="name" required>
-            </div>
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="datetime"><b>Date and Time of Sighting</b></label>
-                <input type="datetime-local" class="form-control" name="datetime" required>
-            </div>
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="latitude"><b>Approximate Latitude</b></label>
-                <input type="text"  class="form-control"  placeholder="Enter latitude" name="latitude" required id="latitude">
-            </div>
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="longitude"><b>Approximate Longitude</b></label>
-                <input type="text"  class="form-control" placeholder="Enter longitude" name="longitude" required>
-            </div>
+                <div class="mb-3">
+                    <label for="datetime" class="form-label">Date and Time of Sighting</label>
+                    <input type="datetime-local" name="datetime" id="datetime" class="form-control" required>
+                </div>
 
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="description"><b>Description</b></label>
-                <textarea name="description" class="form-control" id="exampleFormControlTextarea1" placeholder="Describe any features of the plant you noticed that might help people identify it!" rows="3" required></textarea>
-            </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <p>Place a marker on the map to select the latitude and longitude of the plant.</p>
+                        <p>Alternatively, use GPS to get your current location.</p>
+
+                        <button id="use-cur-location" class="btn btn-success mb-2" type="button">📍Use my current location</button>
+
+                        <div class="mb-2">
+                            <label for="latitude" class="form-label">Latitude</label>
+                            <input type="number" name="latitude" id="latitude" class="form-control" readonly required>
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="longitude" class="form-label">Longitude</label>
+                            <input type="number" name="longitude" id="longitude" class="form-control" readonly required>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div id="map" style="height: 20rem;"></div>
+                    </div>
+                </div>
+
+                <div class="mb-2">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea name="description" id="description" class="form-control" required></textarea>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-lg-6">
+                        <label for="height" class="form-label">Height of Plant</label>
+                        <select name="height" id="height" class="form-select" required>
+                            <option>0-15cm</option>
+                            <option>15-30cm</option>
+                            <option>30-60cm</option>
+                            <option>60-100cm</option>
+                            <option>100cm+</option>
+                        </select>
+                    </div>
+
+                    <div class="col">
+                        <label for="spread" class="form-label">Spread of Plant</label>
+                        <select name="spread" id="spread" class="form-select" required>
+                            <option>0-15cm</option>
+                            <option>15-30cm</option>
+                            <option>30-60cm</option>
+                            <option>60-100cm</option>
+                            <option>100cm+</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-lg-6">
+                        <label for="flowers" class="form-label">Did the plant have flowers?</label>
+                        <select name="flowers" id="flowers" class="form-select" required>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+    
+                    <div class="col">
+                        <label for="flower_colour" class="form-label">If so, what colour were the flowers?</label>
+                        <input type="text" name="flower_colour" id="flower_colour" class="form-control">
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-lg-6">
+                        <label for="leaves" class="form-label">Did the plant have leaves?</label>
+                        <select name="leaves" id="leaves" class="form-select" required>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+
+                    <div class="col">
+                        <label for="seeds_or_fruit" class="form-label">Were there visible seeds or fruit?</label>
+                        <select name="seeds_or_fruit" id="seeds_or_fruit" class="form-select" required>
+                            <option>Yes</option>
+                            <option>No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-lg-6">
+                        <label for="sun_exposure" class="form-label">What was the level of sun exposure in the area?</label>
+                        <select name="sun_exposure" id="sun_exposure" class="form-select" required>
+                            <option>Full Shade</option>
+                            <option>Partial Shade</option>
+                            <option>Full Sun</option>
+                        </select>
+                    </div>
+
+                    <div class="col">
+                        <label for="image_of_plant" class="form-label">Photo of plant</label>
+                        <input type="file" name="image_of_plant" id="image_of_plant" class="form-control" accept="image/*" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit Plant</button>
+            </form>
         </div>
-        <div style=" padding: 25px; margin: 1%;" class="card">
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="height"><b>How tall was the plant?</b></label>
-                <select class="form-control" id="height" name="height" required>
-                    <option>0-15cm</option>
-                    <option>15-30cm</option>
-                    <option>30-60cm</option>
-                    <option>60-100cm</option>
-                    <option>100cm+</option>
+    </div>
+</div>
 
-                </select>
-            </div>
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="spread"><b>What was the spread of the plant?</b></label>
-                <select class="form-control" id="spread" name="spread" required>
-                    <option>0-15cm</option>
-                    <option>15-30cm</option>
-                    <option>30-60cm</option>
-                    <option>60-100cm</option>
-                    <option>100cm+</option>
-
-                </select>
-            </div>
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="flowers"><b>Did the plant have flowers?</b></label>
-                <select class="form-control" id="flowers" name="flowers" required>
-                    <option>yes</option>
-                    <option>no</option>
-                </select>
-            </div>
-
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="text"><b>If so, what colour were the flowers?</b></label>
-                <input type="text" class="form-control" placeholder="What colour would you describe the flowers as? " name="flower_colour">
-            </div>
-
-
-
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="leaves"><b>Did the plant have leaves?</b></label>
-                <select class="form-control" id="leaves" name="leaves" required>
-                    <option>yes</option>
-                    <option>no</option>
-
-                </select>
-            </div>
-
-
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="fruits_or_seeds"><b>Were there visible fruits or seeds?</b></label>
-                <select class="form-control" id="fruits_or_seeds" name="fruits_or_seeds" required>
-                    <option>yes</option>
-                    <option>no</option>
-
-                </select>
-            </div>
-
-
-            <div class="form-group" style="padding-bottom: 10px">
-                <label for="sun_exposure"><b>What was the level of sun exposure in the area?</b></label>
-
-                <select class="form-control" id="sun_exp" name="sun_exposure" required>
-                    <option>Full Shade</option>
-                    <option>Partial Shade</option>
-                    <option>Full Sun</option>
-                </select>
-            </div>
-        </div>
-        <div style="padding: 25px; margin: 1%;" class="card">
-
-            <label class="form-label" for="image_of_plant"><b>Photo of plant</b></label>
-            <input type="file" class="form-control" id="image_of_plant" name="image_of_plant" accept="image/*"/>
-        </div>
-        <p></p>
-
-        <button type="submit" class="btn btn-success" style=" margin: 1%;">Submit Plant</button>
-    </form></div>
-
+<script src="/leaflet/leaflet.js"></script>
+<script src="./javascripts/map.js"></script>
 <%- include('./partials/footer.ejs') %>
