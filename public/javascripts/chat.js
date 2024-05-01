@@ -1,13 +1,18 @@
 const socket = io();
 const currentRoom = window.location.href.split("/").pop();
-const currentUser = "ethan";
+const currentUser = "needs changing"
 const seperate_chats = "||";
 const seperate_names = "|";
 
 
 socket.on('joined', function(room, user) {
     if (user !== currentUser) {
-        writeOnHistory(user, "joined the chat");
+        const history = document.getElementById('history');
+        const newMessage = document.createElement('p');
+
+        newMessage.innerHTML = `${user} joined the chat`;
+        newMessage.className = "system-message";
+        history.appendChild(newMessage);
     }
 });
 
