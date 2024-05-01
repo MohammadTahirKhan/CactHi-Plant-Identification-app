@@ -20,8 +20,7 @@ exports.create = function (plantData, filePath) {
         sun_exposure: plantData.sun_exposure,
         date_time_added: plantData.date_time_added,
         last_checked: plantData.last_checked,
-        date_of_sighting: plantData.date,
-        time_of_sighting: plantData.time
+        date_time_of_sighting: plantData.datetime
     });
 
     // Save the plant to the database and handle success or failure

@@ -29,7 +29,7 @@ router.post('/',upload.single('image_of_plant'), async function (req, res) {
     console.log(req.body["plant_name"]);
     console.log(req.body);
     let plantData = req.body;
-    let filePath = req.file.path;
+    let filePath = req.file.filename;
     let result = await plantsController.create(plantData, filePath);
     console.log(result);
     let all = plants.getAll()

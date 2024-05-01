@@ -20,11 +20,13 @@ router.get('/view-plants', function(req, res, next) {
   plants.getAll().then(plants => {
     plants = JSON.parse(plants)
 
-    if (req.query.sort === 'recent') {
-      plants.sort((a, b) => b.date_time_added - a.date_time_added);
+    // TODO: CHANGE TO CURRENT USER'S USERNAME
+    if (req.query.mySubmissions) {
+      plants = plants.filter(plant => plant.user === "gardener123");
+    }
 
-    } else if (req.query.sort === 'oldest') {
-      plants.sort((a, b) => a.date_time_added - b.date_time_added);
+    if (req.query.sort === 'oldest') {
+      plants.sort((a, b) => new Date(a.date_time_of_sighting) - new Date(b.date_time_of_sighting));
 
     } else if (req.query.sort === 'unidentified') {
       plants.sort((a, b) => a.identification_complete - b.identification_complete);
@@ -40,9 +42,12 @@ router.get('/view-plants', function(req, res, next) {
 
         return bDistance - aDistance;
       });
+      
+    } else {
+      plants.sort((a, b) => new Date(b.date_time_of_sighting) - new Date(a.date_time_of_sighting));
     }
 
-    res.render('view-all-plants', {title: 'View All Plants', plants: plants, sort: req.query.sort});
+    res.render('view-all-plants', {title: 'View All Plants', plants: plants, sort: req.query.sort, mySubmissions: req.query.mySubmissions});
   })
 });
 
@@ -52,14 +57,15 @@ router.get('/view-plants/:uid', function(req, res, next) {
   })
 });
 
-router.post('/changeChat', function (req, res, next) {
-  const pushData = req.body.historyChat.split("$$");
-  console.log(pushData[0]);
-  console.log("ABOVE THIS");
-  let result = plants.updateField(pushData[0], 'chat',pushData[1]);
-  console.log(result);
-  res.redirect('/');
+router.post('/changeChat', (req, res, next) => {
+  console.log(req.body);
+  setImmediate(updateChat, req.body.plantID, req.body.historyChat);
+  res.send('Chat update scheduled');
 });
+
+async function updateChat(plantID, historyChat) {
+  await plants.updateField(plantID, 'chat', historyChat);
+}
 
 
 module.exports = router;
