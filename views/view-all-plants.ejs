@@ -4,6 +4,7 @@
     <div class="d-flex justify-content-end align-items-center gap-2 mb-4">
         <form class="d-flex flex-row gap-2">
             <input type="hidden" name="location" id="location">
+            <input type="hidden" name="username">
             <div>
                 <p class="mb-1">Filter by:</p>
                 <div class="form-check form-check-inline pt-1">
@@ -64,19 +65,28 @@
 </div>
 
 <script>
+    
     const sort = document.getElementById('sort');
     sort.addEventListener('change', () => {
         sort.form.submit();
     });
     if ('<%= sort %>' !== '')
-        sort.value = '<%= sort %>';
+    sort.value = '<%= sort %>';
 
     const mySubmissions = document.getElementById('my-submissions');
     mySubmissions.addEventListener('change', () => {
         mySubmissions.form.submit();
     });
     if ('<%= mySubmissions %>' !== '')
-        mySubmissions.checked = true;
+    mySubmissions.checked = true;
+
+    const usernameInput = document.querySelector('input[name="username"]');
+    const checkCurrentUser = setInterval(() => {
+        if (CURRENT_USER) {
+            usernameInput.value = CURRENT_USER;
+            clearInterval(checkCurrentUser);
+        }
+    }, 100);
 
     // set the location value to the current location value
     const locationInput = document.getElementById('location');
@@ -85,7 +95,6 @@
             locationInput.value = `${position.coords.latitude},${position.coords.longitude}`;
         });
     } 
-    
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>

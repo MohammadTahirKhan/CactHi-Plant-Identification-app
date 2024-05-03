@@ -22,7 +22,7 @@ router.get('/view-plants', function(req, res, next) {
 
     // TODO: CHANGE TO CURRENT USER'S USERNAME
     if (req.query.mySubmissions) {
-      plants = plants.filter(plant => plant.user === "gardener123");
+      plants = plants.filter(plant => plant.user === req.query.username);
     }
 
     if (req.query.sort === 'oldest') {

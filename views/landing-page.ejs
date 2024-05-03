@@ -4,7 +4,8 @@
 <head>
 
     <title><%= title %></title>
-    <link rel="stylesheet" href="./css/bootstrap.min.css">.
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <script src="/javascripts/username-idb.js"></script>
 
 </head>
 
@@ -57,7 +58,7 @@ background-image: url(./images/landing-background.png);
   overflow-x: hidden;
   padding-top: 60px;
   transition: 0.5s;">
-        <form action="/new-plant-sighting">
+        <form id="username-form">
         <div class="form-group" style="padding-bottom: 10px">
             <input type="text"  class="form-control"  placeholder="Username..." name="username" style="
            margin: 0;
@@ -90,7 +91,25 @@ background-image: url(./images/landing-background.png);
     </button>
 </div>
 
+<script>
+  const form = document.getElementById('username-form');
+  form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      
+      const username = form.username.value;
+      const transaction = plantIDB.result.transaction(['usernames'], 'readwrite');
+      const store = transaction.objectStore('usernames');
+      const addRequest = store.add({ username: username });
+
+      addRequest.addEventListener('success', () => {
+          console.log('Added username to IndexedDB');
+          window.location.href = '/view-plants';
+      });
+
+      addRequest.addEventListener('error', (error) => {
+          console.error(error);
+      });
+  });
+</script>
 </body>
-
-
 </html>

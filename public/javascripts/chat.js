@@ -1,6 +1,6 @@
 const socket = io();
 const currentRoom = window.location.href.split("/").pop();
-const currentUser = "needs changing"
+var currentUser;
 const seperate_chats = "||";
 const seperate_names = "|";
 
@@ -22,6 +22,7 @@ socket.on('chat', function(room, user, message) {
 
 
 function connectToRoom(history) {
+    currentUser = CURRENT_USER;
     socket.emit('create or join', currentRoom, currentUser);
 
     if (history) {
@@ -51,11 +52,12 @@ function writeOnHistory(user, message) {
     historyInput.value += `${user}${seperate_names}${message}${seperate_chats}`;
 
     if (user === currentUser) {
-        user = "Me";
         newMessage.className = "current-user-message";
+        newMessage.innerHTML = `${message}`;
+    } else {
+        newMessage.innerHTML = `<strong>${user}</strong>: ${message}`;
     }
 
-    newMessage.innerHTML = `<b>${user}</b>: ${message}`;
     history.appendChild(newMessage);
     document.getElementById('chat_input').value = '';
 }

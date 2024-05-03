@@ -6,7 +6,7 @@
             <form action="new-plant-sighting" method="post" enctype="multipart/form-data">
                 <div class="mb-2">
                     <label for="username" class="form-label">Username</label>
-                    <input type="text" name="username" id="username" class="form-control" required>
+                    <input type="text" name="username" id="username" class="form-control" readonly required>
                 </div>
 
                 <div class="mb-2">
@@ -128,4 +128,13 @@
 
 <script src="/leaflet/leaflet.js"></script>
 <script src="./javascripts/map.js"></script>
+<script>
+    const usernameInput = document.querySelector('input[name="username"]');
+    const checkCurrentUser = setInterval(() => {
+        if (CURRENT_USER) {
+            usernameInput.value = CURRENT_USER;
+            clearInterval(checkCurrentUser);
+        }
+    }, 100);
+</script>
 <%- include('./partials/footer.ejs') %>

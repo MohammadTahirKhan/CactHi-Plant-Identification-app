@@ -138,7 +138,13 @@
 
 <script src="/javascripts/chat.js"></script>
 <script>
-    document.onload = connectToRoom('<%= plant.chat %>');
+    const checkCurrentUser = setInterval(() => {
+        if (CURRENT_USER) {
+            connectToRoom('<%= plant.chat %>');
+            clearInterval(checkCurrentUser);
+        }
+    }, 100);
+    
     
     window.onbeforeunload = function() {
         const data = JSON.stringify({
