@@ -91,6 +91,7 @@
                             </div>
                         </div>
                     <% } %>
+                    <!-- if the current user is the creator -->
                     <% if (!plant.identification_complete) { %> 
                         <button id="view-suggestion" class="btn btn-secondary">View Suggestions</button>
                         <div class="overlay view-suggestion-overlay">
@@ -110,11 +111,13 @@
                                                         <strong><%= suggestion.username %>:</strong>
                                                         <span><%= suggestion.suggestedName %></span>
                                                     </div>
-                                                    <form action="/approve-suggestion" method="post", style="display: inline; float: inline-end;">
-                                                        <input type="hidden" name="plantId" value="<%= plant._id %>">
-                                                        <input type="hidden" name="suggestionId" value="<%= suggestion._id %>">
-                                                        <button type="submit">Approve</button>
-                                                    </form>
+                                                    <% if (suggestion.suggestedName != plant.name) { %>
+                                                        <form action="/approve-suggestion" method="post", style="display: inline; float: inline-end;">
+                                                            <input type="hidden" name="plantID" value="<%= plant._id %>">
+                                                            <input type="hidden" name="suggestedName" value="<%= suggestion.suggestedName %>">
+                                                            <button type="submit">Approve</button>
+                                                        </form>
+                                                    <% } %>
                                                 </li>
                                             <% }) %>
                                         </ul>
@@ -126,12 +129,6 @@
                             </div>
                         </div>
                     <% } %>
-                    
-                    <!-- <% if (!plant.identification_complete) { %> 
-                        <div class="link-secondary text-center">
-                            <a href="/suggestions/<%= plant._id %>">View Suggestions</a>
-                        </div>
-                    <% } %> -->
                             
                 </div>
 
@@ -144,7 +141,7 @@
                         <%= new Date(plant.date_time_added).toLocaleTimeString() %>
                     </p>
                     <p>
-                        <span class="text-muted">Identfication:</span>
+                        <span class="text-muted">Identification:</span>
                         <%= plant.identification_complete ? 'Complete' : 'In-progress' %>
                     </p>
                 </div>
