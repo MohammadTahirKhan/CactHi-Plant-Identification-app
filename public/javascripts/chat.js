@@ -22,18 +22,20 @@ socket.on('chat', function(room, user, message) {
 
 
 function connectToRoom(history) {
-    currentUser = CURRENT_USER;
-    socket.emit('create or join', currentRoom, currentUser);
-
-    if (history) {
-        const messages = history.split(seperate_chats);
-        messages.forEach(message => {
-            const [user, text] = message.split(seperate_names);
-            if (user && text) {
-                writeOnHistory(user, text);
-            }
-        });
-    }
+    getCurrentUser().then((username) => {
+        currentUser = username;
+        socket.emit('create or join', currentRoom, currentUser);
+ 
+        if (history) {
+            const messages = history.split(seperate_chats);
+            messages.forEach(message => {
+                const [user, text] = message.split(seperate_names);
+                if (user && text) {
+                    writeOnHistory(user, text);
+                }
+            });
+        }
+    });
 }
 
 

@@ -65,7 +65,6 @@
 </div>
 
 <script>
-    
     const sort = document.getElementById('sort');
     sort.addEventListener('change', () => {
         sort.form.submit();
@@ -77,16 +76,13 @@
     mySubmissions.addEventListener('change', () => {
         mySubmissions.form.submit();
     });
-    if ('<%= mySubmissions %>' !== '')
-    mySubmissions.checked = true;
 
-    const usernameInput = document.querySelector('input[name="username"]');
-    const checkCurrentUser = setInterval(() => {
-        if (CURRENT_USER) {
-            usernameInput.value = CURRENT_USER;
-            clearInterval(checkCurrentUser);
-        }
-    }, 100);
+    if ('<%= mySubmissions %>' !== '')
+        mySubmissions.checked = true;
+
+    getCurrentUser().then(username => {
+        document.querySelector('input[name="username"]').value = username;
+    });
 
     // set the location value to the current location value
     const locationInput = document.getElementById('location');

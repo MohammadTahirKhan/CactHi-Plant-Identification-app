@@ -129,12 +129,8 @@
 <script src="/leaflet/leaflet.js"></script>
 <script src="./javascripts/map.js"></script>
 <script>
-    const usernameInput = document.querySelector('input[name="username"]');
-    const checkCurrentUser = setInterval(() => {
-        if (CURRENT_USER) {
-            usernameInput.value = CURRENT_USER;
-            clearInterval(checkCurrentUser);
-        }
-    }, 100);
+    getCurrentUser().then(username => {
+        document.querySelector('input[name="username"]').value = username;
+    });
 </script>
 <%- include('./partials/footer.ejs') %>
