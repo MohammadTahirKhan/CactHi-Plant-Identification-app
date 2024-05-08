@@ -5,8 +5,8 @@
         <div class="card-body">
             <form action="new-plant-sighting" method="post" enctype="multipart/form-data" id="new-plant-form">
                 <div class="mb-2">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" name="username" id="username" class="form-control" readonly required>
+                    <label for="user" class="form-label">Username</label>
+                    <input type="text" name="user" id="user" class="form-control" readonly required>
                 </div>
 
                 <div class="mb-2">
@@ -15,8 +15,8 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="datetime" class="form-label">Date and Time of Sighting</label>
-                    <input type="datetime-local" name="datetime" id="datetime" class="form-control" required>
+                    <label for="date_time_of_sighting" class="form-label">Date and Time of Sighting</label>
+                    <input type="datetime-local" name="date_time_of_sighting" id="date_time_of_sighting" class="form-control" required>
                 </div>
 
                 <div class="row mb-2">
@@ -115,8 +115,8 @@
                     </div>
 
                     <div class="col">
-                        <label for="image_of_plant" class="form-label">Photo of plant</label>
-                        <input type="file" name="image_of_plant" id="image_of_plant" class="form-control" accept="image/*" required>
+                        <label for="image" class="form-label">Photo of plant</label>
+                        <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
                     </div>
                 </div>
 
@@ -128,31 +128,5 @@
 
 <script src="/leaflet/leaflet.js"></script>
 <script src="./javascripts/map.js"></script>
-<script>
-    getCurrentUser().then(username => {
-        document.querySelector('input[name="username"]').value = username;
-    });
-
-    const form = document.getElementById('new-plant-form');
-    form.onsubmit = (event) => {
-        event.preventDefault();
-        const formData = new FormData(form);
-        
-        var plant = {};
-        formData.forEach((value, key) => {
-            plant[key] = value;
-        });
-        
-        addData("plants", plant);
-
-        fetch('/new-plant-sighting', {
-            method: 'POST',
-            body: formData
-        }).then((response) => {
-            if (response.ok) {
-                window.location.href = '/view-plants';
-            }
-        });
-    };
-</script>
+<script src="./javascripts/new-plant.js"></script>
 <%- include('./partials/footer.ejs') %>

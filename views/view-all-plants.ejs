@@ -30,7 +30,7 @@
     
         <% } else { %>
             <% plants.forEach(plant => { %>
-                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="col-12 col-md-6 col-lg-4 mb-4 plant-card">
                     <a class="card" href="/view-plants/<%- plant._id %>" style="text-decoration: none;">
                         <img class="card-img-top img-fluid" src="/images/uploads/<%- plant.image %>" alt="Picture of <%- plant.name %>" />
                         <div class="card-body">

@@ -5,7 +5,7 @@ exports.create = function (plantData, filePath) {
     let plant = new plantModel({
         name: plantData.name,
         identification_complete: plantData.identification_complete,
-        user: plantData.username,
+        user: plantData.user,
         chat: plantData.chat,
         description: plantData.description,
         image: filePath, // Assuming this is the field for image path
@@ -18,9 +18,7 @@ exports.create = function (plantData, filePath) {
         leaves: plantData.leaves,
         fruits_or_seeds: plantData.fruits_or_seeds,
         sun_exposure: plantData.sun_exposure,
-        date_time_added: plantData.date_time_added,
-        last_checked: plantData.last_checked,
-        date_time_of_sighting: plantData.datetime
+        date_time_of_sighting: plantData.date_time_of_sighting
     });
 
     // Save the plant to the database and handle success or failure

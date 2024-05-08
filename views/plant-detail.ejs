@@ -95,10 +95,10 @@
                 <div class="card-footer">
                     <p class="card-text mb-0"><span class="text-muted">Posted by</span> <%= plant.user %></p>
                     <p class="card-text">
-                        <span class="text-muted">On</span>
-                        <%= new Date(plant.date_time_added).toLocaleDateString() %>
+                        <span class="text-muted">Plant seen on</span>
+                        <%= new Date(plant.date_time_of_sighting).toLocaleDateString() %>
                         <span class="text-muted">at</span>
-                        <%= new Date(plant.date_time_added).toLocaleTimeString() %>
+                        <%= new Date(plant.date_time_of_sighting).toLocaleTimeString() %>
                     </p>
                 </div>
             </div>

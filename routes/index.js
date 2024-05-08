@@ -18,9 +18,13 @@ router.get('/', function (req, res, next) {
 
 router.get('/view-plants', function(req, res, next) {
   plants.getAll().then(plants => {
-    plants = JSON.parse(plants)
+    plants = JSON.parse(plants);
 
-    // TODO: CHANGE TO CURRENT USER'S USERNAME
+    if (req.query.json) {
+      res.json(plants);
+      return;
+    }
+
     if (req.query.mySubmissions) {
       plants = plants.filter(plant => plant.user === req.query.username);
     }
