@@ -24,9 +24,9 @@
         </form>
     </div>
 
-    <div class="row" data-masonry='{"percentPosition": true }'>
+    <div class="row" data-masonry='{"percentPosition": true }' id="plants">
         <% if (plants.length == 0) { %>
-            <p>There are no plants</p>
+            <p id="no-plants">There are no plants</p>
     
         <% } else { %>
             <% plants.forEach(plant => { %>

@@ -1,6 +1,7 @@
 const openIDB = (storeName, mode) => {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open("plants");
+
     request.addEventListener("upgradeneeded", () => {
       console.log("Upgrading IndexedDB");
 
@@ -9,11 +10,14 @@ const openIDB = (storeName, mode) => {
         keyPath: "username",
         autoIncrement: true,
       });
-      db.createObjectStore("plants", { keyPath: "_id", autoIncrement: true });
+
+      db.createObjectStore("plants", {
+        keyPath: "_id",
+        autoIncrement: true,
+      });
     });
 
     request.addEventListener("success", () => {
-      console.log("Successfully opened IndexedDB");
       const db = request.result;
       const transaction = db.transaction([storeName], mode);
       const store = transaction.objectStore(storeName);
@@ -31,8 +35,9 @@ const addData = async (storeName, data) => {
   store.add(data);
 };
 
-const getData = async (storeName, key) => {
-  const store = await openIDB(storeName, "readonly");
+const getIDBPlant = async (key) => {
+  const store = await openIDB("plants", "readonly");
+
   return new Promise((resolve, reject) => {
     const request = store.get(key);
 
@@ -46,8 +51,9 @@ const getData = async (storeName, key) => {
   });
 };
 
-const getAllData = async (storeName) => {
-  const store = await openIDB(storeName, "readonly");
+const getAllIDBPlants = async () => {
+  const store = await openIDB("plants", "readonly");
+
   return new Promise((resolve, reject) => {
     const request = store.getAll();
 
@@ -63,6 +69,7 @@ const getAllData = async (storeName) => {
 
 const getCurrentUser = async () => {
   const store = await openIDB("username", "readonly");
+
   return new Promise((resolve, reject) => {
     const request = store.getAll();
 

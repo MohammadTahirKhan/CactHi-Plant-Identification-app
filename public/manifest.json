@@ -1,0 +1,16 @@
+{
+  "lang": "en",
+  "name": "Plant Identification",
+  "description": "Identify plants from images",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fff",
+  "theme_color": "#fff",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/images/yuh.png",
+      "sizes": "192x192"
+    }
+  ]
+}
