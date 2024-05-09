@@ -1,11 +1,17 @@
+/**
+ * Controls the new-plant page.
+ */
+
+
+// Populates the user field with the current user's username
 getCurrentUser().then((username) => {
     document.querySelector('input[name="user"]').value = username;
 });
 
-console.log("online", navigator.onLine);
+console.log("Online? ", navigator.onLine);
 
 const form = document.getElementById("new-plant-form");
-form.onsubmit = async (event) => {
+form.onsubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(form);
 
@@ -20,11 +26,19 @@ form.onsubmit = async (event) => {
             body: formData,
         }).then((response) => {
             if (response.ok) {
-                window.location.href = "/view-plants";
+                addData("plants", plant).then(() => {
+                    setTimeout(() => {
+                        window.location.href = "/view-plants";
+                    }, 1000);
+                });
             }
         });
+        
     } else {
-        await addPlantToSyncQueue(plant);
-        // window.location.href = "/view-plants";
+        addPlantToSyncQueue(plant).then(() => {
+            setTimeout(() => {
+                window.location.href = "/view-plants";
+            }, 1000);
+        });
     }
 };

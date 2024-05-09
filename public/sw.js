@@ -9,19 +9,25 @@ self.addEventListener("install", (event) => {
             try {
                 await cache.addAll([
                     "/",
-                    "/manifest.json",
                     "/view-plants",
                     "/new-plant-sighting",
+
+                    "/manifest.json",
                     "/stylesheets/style.css",
+
                     "/css/bootstrap.min.css",
                     "/js/bootstrap.min.js",
-                    "/javascripts/idb-utils.js",
-                    "/javascripts/index.js",
-                    "/javascripts/new-plant.js",
-                    "/images/yuh.png",
+
                     "/leaflet/leaflet.css",
                     "/leaflet/leaflet.js",
+
+                    "/javascripts/idb-utils.js",
+                    "/javascripts/index.js",
                     "/javascripts/map.js",
+                    "/javascripts/new-plant.js",
+                    "/javascripts/view-all-plants.js",
+
+                    "/images/yuh.png",
                 ]);
                 console.log("Assets cached successfully");
             } catch (error) {
@@ -55,19 +61,6 @@ self.addEventListener("fetch", (event) => {
                 return cachedResponse;
             }
 
-            // If the request is for an image, add it to the cache
-            if (event.request.url.includes("/images/")) {
-                try {
-                    const fetchResponse = await fetch(event.request);
-                    // Clone the response so we can use it more than once
-                    const responseClone = fetchResponse.clone();
-                    // Add the image to the cache
-                    cache.put(event.request, responseClone);
-                } catch (error) {
-                    console.error("Error fetching image:", error);
-                }
-            }
-
             return fetch(event.request).catch((error) => {
                 console.error(`Error fetching '${event.request.url}':`, error);
             });
@@ -75,6 +68,10 @@ self.addEventListener("fetch", (event) => {
     );
 });
 
+/**
+ * Sends a plant to the server to be synced.
+ * @param {Object} plant - The plant to sync
+ */
 async function syncPlant(plant) {
     let formData = new FormData();
 

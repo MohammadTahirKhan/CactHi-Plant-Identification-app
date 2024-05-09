@@ -1,3 +1,14 @@
+/**
+ * Contains utility functions for interacting with IndexedDB.
+ */
+
+
+/**
+ * Opens the specified IndexedDB store in the specified mode.
+ * @param {string} storeName - One of: plants, sync-queue, username
+ * @param {string} mode - One of: readwrite, readonly
+ * @returns {Promise<IDBObjectStore>} The object store
+ */
 const openIDB = (storeName, mode) => {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open("plants");
@@ -35,16 +46,29 @@ const openIDB = (storeName, mode) => {
     });
 };
 
+/**
+ * Adds the specified data to the specified store.
+ * @param {string} storeName - Either plants or username
+ * @param {Object} data - The data to add
+ */
 const addData = async (storeName, data) => {
     const store = await openIDB(storeName, "readwrite");
     store.add(data);
 };
 
+/**
+ * Updates a plant in the 'plants' store.
+ * @param {Object} plant - object to overwrite the existing plant with
+ */
 const updatePlant = async (plant) => {
     const store = await openIDB("plants", "readwrite");
     store.put(plant);
 };
 
+/**
+ * Adds a plant to the 'sync-queue' store and notifies the service worker to sync.
+ * @param {Object} plant - plant to add to the sync queue
+ */
 const addPlantToSyncQueue = async (plant) => {
     const store = await openIDB("sync-queue", "readwrite");
     store.add(plant);
@@ -55,6 +79,10 @@ const addPlantToSyncQueue = async (plant) => {
     });
 };
 
+/**
+ * Gets all plants in the 'sync-queue' store.
+ * @returns {Promise<Array<Object>>} - All plants in the 'sync-queue' store
+ */
 const getAllPlantsToSync = async () => {
     const store = await openIDB("sync-queue", "readonly");
 
@@ -69,8 +97,12 @@ const getAllPlantsToSync = async () => {
             reject(event.target.error);
         };
     });
-}
+};
 
+/**
+ * Gets all plants in the 'plants' store.
+ * @returns {Promise<Array<Object>>} - All plants in the 'plants' store
+ */
 const getAllIDBPlants = async () => {
     const store = await openIDB("plants", "readonly");
 
@@ -87,6 +119,10 @@ const getAllIDBPlants = async () => {
     });
 };
 
+/**
+ * Gets the current user from the 'username' store.
+ * @returns {Promise<string>} - The username of the current user
+ */
 const getCurrentUser = async () => {
     const store = await openIDB("username", "readonly");
 
