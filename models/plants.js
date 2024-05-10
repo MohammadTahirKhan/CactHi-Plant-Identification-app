@@ -19,7 +19,11 @@ let PlantSchema = new Schema({
     sun_exposure            : {type: String, required: true, enum: ['Full Sun', 'Partial Shade', 'Full Shade']},
     date_time_added         : {type: Date, required: true, default: Date.now},
     last_checked            : {type: Date, required: true, default: Date.now},
-    date_time_of_sighting   : {type: Date, required: true}
+    date_time_of_sighting   : {type: Date, required: true},
+    suggested_names: [{
+        username: { type: String, required: true },
+        suggestedName: { type: String, required: true }
+    }]
 });
 
 PlantSchema.set('toObject', {
