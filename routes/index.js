@@ -64,6 +64,7 @@ router.post('/approve-suggestion', async (req, res, next) => {
     
     // Update the plant document with the approved name
     plant.name = suggestedName;
+    plant.identification_complete = true;
 
     // Save the updated plant document
 
