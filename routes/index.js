@@ -16,6 +16,74 @@ router.get('/', function (req, res, next) {
   })
 });
 
+router.post('/suggest-name', async (req, res, next) => {
+  try {
+    // Extract suggestion data from the request
+    const plantID = req.body.plantID;
+    const suggestedName = req.body.suggestedName;
+    const username = 'gardener123'; // TODO: CHANGE TO CURRENT USER'S USERNAME
+  
+    // Retrieve the plant document 
+    const plant = await plantModel.findById(plantID);
+    if (!plant) {
+      // Plant document not found
+      console.error('Plant not found for ID:', plantID);
+      return res.status(404).send('Plant not found');
+    }
+
+    if (plant.suggested_names === null || plant.suggested_names === undefined) {
+      plant.suggested_names = []; // Initialize suggested_names if it's null or undefined
+    }
+    plant.suggested_names.push({ username: username, suggestedName: suggestedName });
+  
+    // Save the updated plant document
+    await plant.save();
+  
+    // Redirect or send response as needed
+    res.redirect('/view-plants/' + plantID); 
+  } catch (error) {
+    console.error('Error while adding suggestion:', error);
+    // Handle error and send appropriate response
+    res.status(500).send('An error occurred while adding suggestion');
+  }
+});
+
+router.post('/approve-suggestion', async (req, res, next) => {
+  try {
+    // Extract suggestion data from the request
+    const plantID = req.body.plantID;
+    const suggestedName = req.body.suggestedName;
+    
+    // Retrieve the plant document
+    const plant = await plantModel.findById(plantID);
+    if (!plant) {
+      // Plant document not found
+      console.error('Plant not found for ID:', plantID);
+      return res.status(404).send('Plant not found');
+    }
+    
+    // Update the plant document with the approved name
+    plant.name = suggestedName;
+    plant.identification_complete = true;
+
+    // Save the updated plant document
+
+    await plant.save();
+
+    // Redirect or send response as needed
+    res.redirect('/view-plants/' + plantID);
+  } catch (error) {
+    console.error('Error while approving suggestion:', error);
+    // Handle error and send appropriate response
+    res.status(500).send('An error occurred while approving suggestion');
+  }
+});
+
+
+
+
+
+
 router.get('/view-plants', function(req, res, next) {
   plants.getAll().then(plants => {
     plants = JSON.parse(plants);
@@ -60,6 +128,7 @@ router.get('/view-plants/:uid', function(req, res, next) {
     res.render('plant-detail', {title: `${plant.name} Details`, plant: plant});
   })
 });
+
 
 router.post('/changeChat', (req, res, next) => {
   console.log(req.body);
