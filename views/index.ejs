@@ -1,44 +1,64 @@
+
+<link rel="stylesheet" href="/stylesheets/style.css">
+
 <%- include('./partials/header.ejs') %>
 
-<h1><%= title %></h1>
-<p>Welcome to <%= title %></p>
 
-<label for="name" id="nameLabel">Enter Name:</label>
-<input type="text" id="name" name="name"><br><br>
-<label for="roomNo" style="display: none">RoomNo:</label>
-<input type="text" id="roomNo" name="roomNo" style="display: none"><br><br>
+<h1 style= "text-align: center;"><b>Welcome to PLANT ID SYSTEM NAME</b></h1>
+<div class="d-flex flex-row">
+    <div class="p-2" style="width: 33%;height:100%;">
+        <div class="card" style=" margin:1%;">
+            <img src="/images/cactusfriend.png" class="float-left" style="height: auto;">
+        </div>
+    </div>
+    <div class="p-2">
+        <div class="card" style="margin:1%; height:100%; ">
+            <div class="card-body">
+                <h5 class="card-title" style="font-size: 2em;">Got a plant to identify?</h5>
+                <p class="card-text" >Click on 'New Plant' to upload your own plant, and allow other people to help you figure out its name! You'll need a few pieces of information including:</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Location you found the plant</li>
+                <li class="list-group-item">Details about the plant - did it have flowers? How big was it?</li>
+                <li class="list-group-item">When you saw the plant</li>
+            </ul>
+            <div class="card-body text-center" style="
+                height: 5rem;
+                display: grid;
+                place-items: center;">
 
-<p id="roomNo">Room ID</p>
-<div id="plant_list">
-<% data.forEach(plant => { %>
-    <p><strong>Name:</strong> <%= plant.name%></p>
-    <p><strong>Height</strong> <%= plant.height %></p>
-    <button id="connect" onclick="connectToRoom('<%= plant._id%>','<%= plant.chat%>')">Connect</button>
-    <hr>
-    <% }); %>
-    <hr>
+                <a href="/new-plant-sighting/" >
+                    <button type="button" class="btn btn-success btn-lg">Add a new plant!</button>
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="p-2">    <div class="card" style="margin:1%; height:100%;">
+            <div class="card-body">
+                <h5 class="card-title" style="font-size: 2em;">Want to help other people identify their own plants?</h5>
+                <p class="card-text">You can try offering your skills to other people, and help them figure out the names of plants they've seen too! Why not try:</p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Suggesting names for uploaded plants!</li>
+                <li class="list-group-item">Chatting about your thoughts on the plant and its name</li>
+                <li class="list-group-item">Searching for plants in your local area!</li>
+            </ul>
+            <div class="card-body text-center" style="
+                height: 5rem;
+                display: grid;
+                place-items: center;">
+                <a href="/view-plants/" >
+
+                <button type="button" class="btn btn-success btn-lg"> Help other people name their plants!</button>
+                </a></div>
+        </div></div>
 </div>
 
-<div id="chat_interface" style="display: none">
-  <div>
-    <div id="who_you_are" style="display: inline"></div>, you are in room: <div id="in_room" style="display: inline"></div>
-  </div>
-  <div id="history" class="boxed"></div>
-  <div id="input" class="bottom boxed">
-    <form onsubmit="return false;" style="width: 100%">
-      <p>
-
-        <input type="text" id="chat_input" name="chat_input" style="width: 80%">
-        <button id="chat_send" onclick="sendChatText()">Send</button>
-      </p>
-    </form>
-  </div>
-</div>
 
 
-<form action="/changeChat" method="POST" enctype="application/x-www-form-urlencoded">
-  <input type="text" id="historyChat" name="historyChat" style="display: none">
-  <button id="BackButton" type="submit" style="display: none">Back</button>
-</form>
+
+
 
 <%- include('./partials/footer.ejs') %>
