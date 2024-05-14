@@ -129,6 +129,10 @@ router.get('/view-plants/:uid', function(req, res, next) {
   })
 });
 
+router.get('/offline-detail', function(req, res, next) {
+  res.render('offline-detail', {title: 'Offline Plant Detail'});
+});
+
 
 router.post('/changeChat', (req, res, next) => {
   console.log(req.body);

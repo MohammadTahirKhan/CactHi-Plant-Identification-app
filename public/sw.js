@@ -11,6 +11,7 @@ self.addEventListener("install", (event) => {
                     "/",
                     "/view-plants",
                     "/new-plant-sighting",
+                    '/offline-detail',
 
                     "/manifest.json",
                     "/stylesheets/style.css",

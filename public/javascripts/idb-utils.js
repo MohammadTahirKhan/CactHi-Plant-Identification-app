@@ -66,6 +66,27 @@ const updatePlant = async (plant) => {
 };
 
 /**
+ * Gets a plant from the 'plants' store with the specified id.
+ * @param {number} id - id of the plant to get
+ * @returns {Promise<Object>} The plant with the specified id
+ */
+const getPlant = async (id) => {
+    const store = await openIDB("plants", "readonly");
+
+    return new Promise((resolve, reject) => {
+        const request = store.get(id);
+
+        request.onsuccess = function (event) {
+            resolve(event.target.result);
+        };
+
+        request.onerror = function (event) {
+            reject(event.target.error);
+        };
+    });
+};
+
+/**
  * Adds a plant to the 'sync-queue' store and notifies the service worker to sync.
  * @param {Object} plant - plant to add to the sync queue
  */
