@@ -46,6 +46,10 @@
                             </div>
                             <h6 class="card-subtitle text-muted mb-2"><%= plant.latitude %>&deg; N, <%= plant.longitude %>&deg; W</h6>
                             <p class="card-text"><%= plant.description %></p>
+                            <p><strong>DBPedia:</strong> <%= plant.dbpedia%></p>
+                            <p><strong>Taxon:</strong> <%= plant.taxon%></p>
+                            <p><strong>URI:</strong> <%= plant.uri%></p>
+
                         </div>
                         <div class="card-footer">
                             <p class="card-text mb-0"><span class="text-muted">Posted by</span> <%= plant.user %></p>
