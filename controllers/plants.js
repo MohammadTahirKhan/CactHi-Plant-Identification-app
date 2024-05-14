@@ -5,7 +5,7 @@ exports.create = function (plantData, filePath) {
     let plant = new plantModel({
         name: plantData.name,
         identification_complete: plantData.identification_complete,
-        user: plantData.username,
+        user: plantData.user,
         chat: plantData.chat,
         description: plantData.description,
         image: filePath, // Assuming this is the field for image path

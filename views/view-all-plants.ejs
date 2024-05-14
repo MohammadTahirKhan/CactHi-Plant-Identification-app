@@ -4,6 +4,7 @@
     <div class="d-flex justify-content-end align-items-center gap-2 mb-4">
         <form class="d-flex flex-row gap-2">
             <input type="hidden" name="location" id="location">
+            <input type="hidden" name="username">
             <div>
                 <p class="mb-1">Filter by:</p>
                 <div class="form-check form-check-inline pt-1">
@@ -23,13 +24,13 @@
         </form>
     </div>
 
-    <div class="row" data-masonry='{"percentPosition": true }'>
+    <div class="row" data-masonry='{"percentPosition": true }' id="plants">
         <% if (plants.length == 0) { %>
-            <p>There are no plants</p>
+            <p id="no-plants">There are no plants</p>
     
         <% } else { %>
             <% plants.forEach(plant => { %>
-                <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="col-12 col-md-6 col-lg-4 mb-4 plant-card">
                     <a class="card" href="/view-plants/<%- plant._id %>" style="text-decoration: none;">
                         <img class="card-img-top img-fluid" src="/images/uploads/<%- plant.image %>" alt="Picture of <%- plant.name %>" />
                         <div class="card-body">
@@ -69,14 +70,19 @@
         sort.form.submit();
     });
     if ('<%= sort %>' !== '')
-        sort.value = '<%= sort %>';
+    sort.value = '<%= sort %>';
 
     const mySubmissions = document.getElementById('my-submissions');
     mySubmissions.addEventListener('change', () => {
         mySubmissions.form.submit();
     });
+
     if ('<%= mySubmissions %>' !== '')
         mySubmissions.checked = true;
+
+    getCurrentUser().then(username => {
+        document.querySelector('input[name="username"]').value = username;
+    });
 
     // set the location value to the current location value
     const locationInput = document.getElementById('location');
@@ -85,8 +91,8 @@
             locationInput.value = `${position.coords.latitude},${position.coords.longitude}`;
         });
     } 
-    
 </script>
 
+<script src="./javascripts/view-all-plants.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous" async></script>
 <%- include('./partials/footer.ejs') %>

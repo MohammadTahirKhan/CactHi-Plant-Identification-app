@@ -59,10 +59,12 @@ a.card:hover {
   width: 100%;
   background: transparent;
   text-align: center;
+  font-size: 0.9rem;
+  font-variant: small-caps;
 }
 
 #history .system-message::after {
-  border-color: transparent transparent transparent transparent;
+  display: none;
 }
 
 .overlay {

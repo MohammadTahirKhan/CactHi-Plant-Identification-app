@@ -24,7 +24,7 @@ router.get('/',  function(req, res, next) {
     res.render('new-plant-sighting', { title: 'Plant Creation' });
 });
 
-router.post('/',upload.single('image_of_plant'), async function (req, res) {
+router.post('/',upload.single('image'), async function (req, res) {
     console.log(req.body.username);
     console.log(req.body["plant_name"]);
     console.log(req.body);
