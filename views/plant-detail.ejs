@@ -7,7 +7,7 @@
                 <img class="card-img-top object-fit-cover" src="/images/uploads/<%- plant.image %>" alt="Picture of <%- plant.name %>"/>
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="card-title"><%= plant.name %></h4>
+                        <h4 class="card-title"><%= plant.name %> <span class="fs-5 fst-italic fw-normal">(<%- plant.taxon %>)</span></h4>
                         <% if (plant.identification_complete) { %>
                             <div class="badge text-bg-success tooltip-button">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
@@ -19,20 +19,23 @@
                         </div>
                         
                     <h6 class="card-subtitle text-muted mb-2"><%= plant.latitude %>&deg; N, <%= plant.longitude %>&deg; W</h6>
-                    <p class="card-text"><%= plant.description %></p>
+                    <p class="card-text"><%- plant.description %></p>
+                    <p class="card-text fst-italic"><%- plant.dbpedia %></p>
+                    <p class="card-text text-subtitle"><a class="link-success" href="<%= plant.uri %>"><%- plant.uri %></a></p>
+           
                     <div id="map" class="my-3" style="height: 10rem; border-radius: 0.375rem;"></div>
                         
                     <div class="row row-cols-2 row-cols-lg-3 text-center g-2 mb-4">
                         <div class="col">
                             <div class="border rounded align-self-center p-2">
                                 <p class="mb-0 text-muted">Height</p>
-                                <p class="mb-0"><%= plant.height %> cm</p>
+                                <p class="mb-0"><%= plant.height %></p>
                             </div>
                         </div>
                         <div class="col">
                             <div class="border rounded align-self-center p-2">
                                 <p class="mb-0 text-muted">Spread</p>
-                                <p class="mb-0"><%= plant.spread %> cm</p>
+                                <p class="mb-0"><%= plant.spread %></p>
                             </div>
                         </div>
                         <% if (plant.flowers) { %>
@@ -73,7 +76,7 @@
                     <% if (!plant.identification_complete) { %>
                         <button id="suggest-name" class="btn btn-secondary">Suggest Name</button>
                         <div class="overlay">
-                            <div class="suggest-name-form card" style="width: 25rem; max-width: 95dvw;">
+                            <div class="overlay-card card" style="width: 25rem; max-width: 95dvw;">
                                 <div class="card-header">
                                     <button id="close-suggest-name" type="button" class="btn-close" aria-label="Close"></button>
                                 </div>
@@ -166,29 +169,22 @@
 </div>
 
 <script>
-    function toggleOverlay(displayStyle) {
-        document.querySelector(".overlay").style.display = displayStyle;
+    if ("<%= plant.identification_complete%>" === "false") {
+        document.getElementById("suggest-name").onclick = () => document.querySelector(".overlay").style.display = "block";
+        document.getElementById("close-suggest-name").onclick = () => document.querySelector(".overlay").style.display = "none";
+        
+        getCurrentUser().then(name => {
+            if (name === "<%- plant.user %>") {
+                document.getElementById("suggestion-panel").style.display = "block";
+            } else {
+                document.getElementById("suggestion-panel").style.display = "none";
+            }
+        })
+        
+        document.getElementById("view-suggestion").onclick = () => document.querySelector(".view-suggestion-overlay").style.display = "block";
+        document.getElementById("close-view-suggestions").onclick = () => document.querySelector(".view-suggestion-overlay").style.display = "none";
     }
-    document.getElementById("suggest-name").onclick = () => toggleOverlay("block");
-    document.getElementById("close-suggest-name").onclick = () => toggleOverlay("none");
 </script>
-
-<script>
-    getCurrentUser().then(name => {
-        if (name === "<%- plant.user %>") {
-            document.getElementById("suggestion-panel").style.display = "block";
-        } else {
-            document.getElementById("suggestion-panel").style.display = "none";
-        }
-    })
-
-    function toggleViewSuggestionsOverlay(displayStyle) {
-        document.querySelector(".view-suggestion-overlay").style.display = displayStyle;
-    }
-    document.getElementById("view-suggestion").onclick = () => toggleViewSuggestionsOverlay("block");
-    document.getElementById("close-view-suggestions").onclick = () => toggleViewSuggestionsOverlay("none");
-</script>
-
 
 <script src="/javascripts/chat.js"></script>
 <script>

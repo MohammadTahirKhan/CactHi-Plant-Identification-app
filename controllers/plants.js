@@ -20,7 +20,7 @@ exports.create = function (plantData, filePath) {
         sun_exposure: plantData.sun_exposure,
         date_time_added: plantData.date_time_added,
         last_checked: plantData.last_checked,
-        date_time_of_sighting: plantData.datetime,
+        date_time_of_sighting: plantData.date_time_of_sighting,
         suggested_names: plantData.suggested_names
     });
 

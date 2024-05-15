@@ -4,13 +4,15 @@ self.addEventListener("install", (event) => {
     event.waitUntil(
         (async () => {
             const cache = await caches.open("static");
-            console.log("Caching assets");
+            console.log("[SW] Caching assets");
 
             try {
                 await cache.addAll([
                     "/",
+                    "/landing-page",
                     "/view-plants",
                     "/new-plant-sighting",
+                    '/offline-detail',
 
                     "/manifest.json",
                     "/stylesheets/style.css",
@@ -25,13 +27,13 @@ self.addEventListener("install", (event) => {
                     "/javascripts/index.js",
                     "/javascripts/map.js",
                     "/javascripts/new-plant.js",
+                    "/javascripts/offline-detail.js",
                     "/javascripts/view-all-plants.js",
 
-                    "/images/yuh.png",
+                    "/images/cactusfriend.png",
                 ]);
-                console.log("Assets cached successfully");
             } catch (error) {
-                console.error("Error caching assets:", error);
+                console.error("[SW] Error caching assets:", error);
             }
         })()
     );
@@ -52,27 +54,40 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+    const url = new URL(event.request.url);
+
+    // Skip fetch for uploaded images
+    if (!navigator.onLine && url.pathname.startsWith("/images/uploads")) {
+        event.respondWith(new Response('', { status: 200 }));
+        return;
+    }
+
     event.respondWith(
         (async () => {
-            const cache = await caches.open("static");
-            const cachedResponse = await cache.match(event.request);
+            try {
+                const networkResponse = await fetch(event.request)
+                return networkResponse;
+            } catch (error) {
+                const cache = await caches.open("static");
+                // Remove the search query from the URL to match the cache
+                url.search = "";
 
-            if (cachedResponse) {
-                return cachedResponse;
+                const cachedResponse = await cache.match(url.toString(), { ignoreSearch: true });    
+                if (cachedResponse) {
+                    return cachedResponse;
+                }
+
+                throw error;
             }
-
-            return fetch(event.request).catch((error) => {
-                console.error(`Error fetching '${event.request.url}':`, error);
-            });
         })()
-    );
+    )
 });
 
 /**
  * Sends a plant to the server to be synced.
  * @param {Object} plant - The plant to sync
  */
-async function syncPlant(plant) {
+const syncPlant = async (plant) => {
     let formData = new FormData();
 
     Object.keys(plant).forEach((key) => {
@@ -85,22 +100,55 @@ async function syncPlant(plant) {
     });
 
     if (response.ok) {
-        console.log("Plant synced successfully");
         const store = await openIDB("sync-queue", "readwrite");
         await store.delete(plant._id);
     } else {
-        console.error("Error syncing plant:", response.statusText);
+        console.error("[SW] Error syncing plant:", response.statusText);
+    }
+}
+
+/**
+ * Sends a chat to the server to be synced.
+ * @param {Object} chat - The chat to sync
+ */
+const syncChat = async (chat) => {
+    const data = new URLSearchParams();
+    data.append("plantID", chat._id);
+    data.append("msg", chat.chat);
+
+    const response = await fetch("/sync-offline-chat", {
+        method: "POST",
+        body: data,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    });
+
+    if (response.ok) {
+        const store = await openIDB("chat-sync-queue", "readwrite");
+        await store.delete(chat._id);
+    } else {
+        console.error("[SW] Error syncing chat:", response.statusText);
     }
 }
 
 self.addEventListener("sync", (event) => {
     if (event.tag === "sync-plants") {
-        console.log("Syncing plants");
+        console.log("[SW] Uploading plants to server");
         event.waitUntil(
             (async () => {
                 const plants = await getAllPlantsToSync();
-                console.log("Plants to sync:", plants);
                 await Promise.all(plants.map(syncPlant));
+            })()
+        );
+    }
+
+    if (event.tag === "sync-chats") {
+        console.log("[SW] Uploading chat messages to server");
+        event.waitUntil(
+            (async () => {
+                const chats = await getAllChatsToSync();
+                await Promise.all(chats.map(syncChat));
             })()
         );
     }

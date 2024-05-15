@@ -21,24 +21,27 @@
 
                 <div class="row mb-2">
                     <div class="col-lg-4">
-                        <p>Place a marker on the map to select the latitude and longitude of the plant.</p>
-                        <p>Alternatively, use GPS to get your current location.</p>
-
-                        <button id="use-cur-location" class="btn btn-success mb-2" type="button">📍Use my current location</button>
+                        <p>Enter the location of the plant via one of the following methods:</p>
+                        <ul>
+                            <li>Select a point on the map,</li>
+                            <li>Enter coordinates manually</li>
+                        </ul>
+                        <p>Or</p>
+                        <button id="use-cur-location" class="btn btn-success mb-2" type="button">📍Use your current location</button>
 
                         <div class="mb-2">
                             <label for="latitude" class="form-label">Latitude</label>
-                            <input type="number" name="latitude" id="latitude" class="form-control" readonly required>
+                            <input type="number" name="latitude" id="latitude" class="form-control" step="any" required>
                         </div>
 
                         <div class="mb-2">
                             <label for="longitude" class="form-label">Longitude</label>
-                            <input type="number" name="longitude" id="longitude" class="form-control" readonly required>
+                            <input type="number" name="longitude" id="longitude" class="form-control" step="any" required>
                         </div>
                     </div>
 
                     <div class="col">
-                        <div id="map" style="height: 20rem;"></div>
+                        <div id="map" style="height: 100%; min-height: 20rem;"></div>
                     </div>
                 </div>
 
@@ -82,7 +85,7 @@
     
                     <div class="col">
                         <label for="flower_colour" class="form-label">If so, what colour were the flowers?</label>
-                        <input type="text" name="flower_colour" id="flower_colour" class="form-control">
+                        <input type="text" name="flower_colour" id="flower_colour" class="form-control" required>
                     </div>
                 </div>
 
@@ -116,7 +119,28 @@
 
                     <div class="col">
                         <label for="image" class="form-label">Photo of plant</label>
-                        <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <input type="hidden" name="webcam" id="cam-input">
+                                <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
+                            </div>
+
+                            <div class="col">
+                                <button id="cam-overlay" class="btn btn-success w-100">📸 Use camera</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="overlay">
+                        <div class="overlay-card card" style="width: 40rem; max-width: 95dvw;">
+                            <div class="card-header">
+                                <button id="close-cam-overlay" type="button" class="btn-close" aria-label="Close"></button>
+                            </div>
+                            
+                            <video id="webcam" autoplay></video>
+                            <button id="capture" class="btn btn-success">Capture</button>
+                            <canvas id="canvas" style="display: none;"></canvas>
+                        </div>
                     </div>
                 </div>
 
@@ -129,4 +153,45 @@
 <script src="/leaflet/leaflet.js"></script>
 <script src="./javascripts/map.js"></script>
 <script src="./javascripts/new-plant.js"></script>
+<script>
+    const hasFlowers = document.getElementById('flowers');
+    const flowerColour = document.getElementById('flower_colour');
+    hasFlowers.onchange = function() {
+        if (hasFlowers.value === 'false') {
+            flowerColour.value = '';
+            flowerColour.disabled = true;
+        } else {
+            flowerColour.disabled = false;
+            flowerColour.required = true;
+        }
+    }
+</script>
+<script>
+    const video = document.getElementById('webcam');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+
+    document.getElementById("cam-overlay").onclick = () => {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                    video.play();
+                });
+        }
+        document.querySelector(".overlay").style.display = "block";
+    }
+        
+    document.getElementById("close-cam-overlay").onclick = () => document.querySelector(".overlay").style.display = "none";
+
+    captureButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('image').disabled = true;
+        video.pause();
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        document.getElementById("cam-input").value = canvas.toDataURL('image/png');
+    });
+</script>
 <%- include('./partials/footer.ejs') %>

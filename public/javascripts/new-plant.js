@@ -8,8 +8,6 @@ getCurrentUser().then((username) => {
     document.querySelector('input[name="user"]').value = username;
 });
 
-console.log("Online? ", navigator.onLine);
-
 const form = document.getElementById("new-plant-form");
 form.onsubmit = (event) => {
     event.preventDefault();

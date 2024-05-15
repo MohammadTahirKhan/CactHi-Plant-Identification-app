@@ -3,6 +3,8 @@ var router = express.Router();
 var plantsController = require('../controllers/plants');
 var multer = require('multer');
 const plants = require("../controllers/plants");
+const fs = require('fs');
+const path = require('path');
 
 // Multer configuration for file upload
 var storage = multer.diskStorage({
@@ -24,20 +26,21 @@ router.get('/',  function(req, res, next) {
     res.render('new-plant-sighting', { title: 'Plant Creation' });
 });
 
-router.post('/',upload.single('image'), async function (req, res) {
-    console.log(req.body.username);
-    console.log(req.body["plant_name"]);
-    console.log(req.body);
+router.post('/', upload.single('image'), async function (req, res) {
     let plantData = req.body;
-    let filePath = req.file.filename;
-    let result = await plantsController.create(plantData, filePath);
-    console.log(result);
-    let all = plants.getAll()
-    all.then(students => {
-        let data = JSON.parse(students);
-        res.render('index', {title: "Success", data: data});
-    })
+    let filePath = null;
+    
+    if (req.body.webcam) {
+        let base64Data = req.body.webcam.replace(/^data:image\/png;base64,/, "");
 
+        filePath = Date.now() + '.png';
+        fs.writeFileSync(path.join("public", "images", "uploads", filePath), base64Data, 'base64');
+    } else {
+        filePath = req.file.filename;
+    }
+
+    await plantsController.create(plantData, filePath);
+    res.redirect('/view-plants');
 });
 
 module.exports = router;

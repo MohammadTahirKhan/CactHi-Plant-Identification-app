@@ -7,7 +7,6 @@ var logger = require('morgan');
 const socketIo = require('socket.io');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var newPlantRouter = require('./routes/new-plant-sighting');
 var landingPageRouter = require('./routes/landing-page');
 
@@ -29,7 +28,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/public/images/uploads', express.static(path.join(__dirname, '/public/images/uploads')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/new-plant-sighting', newPlantRouter);
 app.use('/landing-page', landingPageRouter);
 
@@ -45,7 +43,6 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  console.log(err);
   res.status(err.status || 500);
   res.render('error');
 });

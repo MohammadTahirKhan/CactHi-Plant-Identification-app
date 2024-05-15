@@ -7,13 +7,7 @@ var plantModel = require('../models/plants');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  let result = plants.getAll()
-  result.then(students => {
-    let data = JSON.parse(students);
-    //console.log(data)
-    res.render('index', {title: 'PLANTS!!!', data: data});
-
-  })
+  res.render('index', {title: 'PLANTS!!!'});
 });
 
 router.post('/suggest-name', async (req, res, next) => {
@@ -84,56 +78,133 @@ router.post('/approve-suggestion', async (req, res, next) => {
 
 
 
-router.get('/view-plants', function(req, res, next) {
-  plants.getAll().then(plants => {
-    plants = JSON.parse(plants);
+router.get('/view-plants', function(req, res, next) {  
+  let result = plants.getAll();
 
+  result.then(async plants => {
+    let data = JSON.parse(plants);
+    
     if (req.query.json) {
-      res.json(plants);
+      res.json(data);
       return;
     }
-
+    
+  
     if (req.query.mySubmissions) {
-      plants = plants.filter(plant => plant.user === req.query.username);
+      data = data.filter(plant => plant.user === req.query.username);
     }
 
-    if (req.query.sort === 'oldest') {
-      plants.sort((a, b) => new Date(a.date_time_of_sighting) - new Date(b.date_time_of_sighting));
+      if (req.query.mySubmissions) {
+        data = data.filter(plant => plant.user === req.query.username);
+      }
 
-    } else if (req.query.sort === 'unidentified') {
-      plants.sort((a, b) => a.identification_complete - b.identification_complete);
+      if (req.query.sort === 'oldest') {
+        data.sort((a, b) => new Date(a.date_time_of_sighting) - new Date(b.date_time_of_sighting));
 
-    } else if (req.query.sort === 'closest' || req.query.sort === 'farthest') {
-      location = req.query.location.split(',');
-      plants.sort((a, b) => {
-        aDistance = Math.sqrt(Math.pow(a.latitude - location[0], 2) + Math.pow(a.longitude - location[1], 2));
-        bDistance = Math.sqrt(Math.pow(b.latitude - location[0], 2) + Math.pow(b.longitude - location[1], 2));
+      } else if (req.query.sort === 'unidentified') {
+        data.sort((a, b) => a.identification_complete - b.identification_complete);
 
-        if (req.query.sort === 'closest')
-          return aDistance - bDistance;
+      } else if (req.query.sort === 'closest' || req.query.sort === 'farthest') {
+        location = req.query.location.split(',');
+        data.sort((a, b) => {
+          aDistance = Math.sqrt(Math.pow(a.latitude - location[0], 2) + Math.pow(a.longitude - location[1], 2));
+          bDistance = Math.sqrt(Math.pow(b.latitude - location[0], 2) + Math.pow(b.longitude - location[1], 2));
 
-        return bDistance - aDistance;
+          if (req.query.sort === 'closest')
+            return aDistance - bDistance;
+
+          return bDistance - aDistance;
+        });
+
+      } else {
+        data.sort((a, b) => new Date(b.date_time_of_sighting) - new Date(a.date_time_of_sighting));
+      }
+
+      res.render('view-all-plants', {
+        title: 'View All Plants',
+        plants: data,
+        sort: req.query.sort,
+        mySubmissions: req.query.mySubmissions
       });
-      
-    } else {
-      plants.sort((a, b) => new Date(b.date_time_of_sighting) - new Date(a.date_time_of_sighting));
-    }
+    })
+  });
 
-    res.render('view-all-plants', {title: 'View All Plants', plants: plants, sort: req.query.sort, mySubmissions: req.query.mySubmissions});
-  })
-});
+const fetchDbpediaData = async (plant) => {
+  const endpointUrl = 'http://dbpedia.org/sparql';
+  const sparqlQuery = `
+            PREFIX dbo: <http://dbpedia.org/ontology/>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+            SELECT ?plant ?commonName ?description ?taxon
+            WHERE {
+              VALUES ?commonName { "${plant.name}"@en }
+              ?plant rdfs:label ?commonName;
+                      dbo:abstract ?description;
+                      dbp:taxon ?taxon.
+              FILTER (lang(?description) = "en")
+            }
+        `;
+  const encodedQuery = encodeURIComponent(sparqlQuery);
+  const url = `${endpointUrl}?query=${encodedQuery}&format=json`;
+
+  let response = await fetch(url);
+  let json = await response.json();
+  let result = json.results.bindings[0];
+  return result ? {
+    dbpediaUri: result.plant.value,
+    commonName: result.commonName.value,
+    description: result.description.value,
+    taxon: result.taxon.value
+  } : {};
+};
+
+const updatePlantWithDbpediaData = async (plant) => {
+  let dbpediaData = await fetchDbpediaData(plant);
+
+  plant.taxon = dbpediaData.taxon || "No taxon available";
+  plant.dbpedia = dbpediaData.description 
+    ? dbpediaData.description.length > 150
+      ? dbpediaData.description.slice(0,150+dbpediaData.description.slice(150,160).indexOf(" ")) + " ..."
+      : dbpediaData.description
+    : "No DBpedia description available";
+  plant.uri = dbpediaData.dbpediaUri || "No DBpedia URI available";
+};
 
 router.get('/view-plants/:uid', function(req, res, next) {
-  plantModel.findById(req.params.uid).then(plant => {
+  plantModel.findById(req.params.uid).then(async plant => {
+    await updatePlantWithDbpediaData(plant);
     res.render('plant-detail', {title: `${plant.name} Details`, plant: plant});
-  })
+  }).catch(error => {
+    res.status(404).send('Plant not found');
+  });
+});
+
+router.get('/offline-detail', function(req, res, next) {
+  res.render('offline-detail', {title: 'Offline Plant Detail'});
 });
 
 
 router.post('/changeChat', (req, res, next) => {
-  console.log(req.body);
   setImmediate(updateChat, req.body.plantID, req.body.historyChat);
   res.send('Chat update scheduled');
+});
+
+router.post('/sync-offline-chat', (req, res, next) => {
+  plantModel.findById(req.body.plantID).then(plant => {
+      plant.chat += req.body.msg;
+      plant.save()
+          .then(() => {
+              res.send('Chat sync successful');
+          })
+          .catch(error => {
+              console.error(error);
+              res.status(500).send('Chat sync failed');
+          });
+  })
+  .catch(error => {
+      console.error(error);
+      res.status(500).send('Chat sync failed');
+  });
 });
 
 async function updateChat(plantID, historyChat) {
