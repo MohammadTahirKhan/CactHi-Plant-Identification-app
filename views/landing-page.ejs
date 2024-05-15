@@ -1,8 +1,5 @@
 
-<link rel="stylesheet" href="/stylesheets/style.css">
-
 <%- include('./partials/header.ejs') %>
-
 
 <h1 style= "text-align: center;"><b>Welcome to PLANT ID SYSTEM NAME</b></h1>
 <div class="d-flex flex-row">
@@ -56,9 +53,17 @@
         </div></div>
 </div>
 
+<script>
+  const form = document.getElementById('username-form');
+  form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const username = form.username.value;
 
-
-
-
+      addData('username', { username: username }).then(() => {
+          console.log('Added username to IndexedDB');
+          window.location.href = '/view-plants';
+      });
+  });
+</script>
 
 <%- include('./partials/footer.ejs') %>

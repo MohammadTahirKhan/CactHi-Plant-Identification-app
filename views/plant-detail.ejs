@@ -70,7 +70,6 @@
                         </div>
                     </div>
 
-                      
                     <% if (!plant.identification_complete) { %>
                         <button id="suggest-name" class="btn btn-secondary">Suggest Name</button>
                         <div class="overlay">
@@ -90,59 +89,53 @@
                                 </form>
                             </div>
                         </div>
-                    <% } %>
-                    <!-- if the current user is the creator -->
-                    <% if (!plant.identification_complete) { %> 
-                        <button id="view-suggestion" class="btn btn-secondary">View Suggestions</button>
-                        <div class="overlay view-suggestion-overlay">
-                            <div class="view-suggestion-form card" style="width: 40rem; max-width: 95dvw; height: 50vh; overflow-y: auto; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                                <div class="card-header">
-                                    <button id="close-view-suggestions" type="button" class="btn-close" aria-label="Close"></button>
-                                </div>
-                                
-                                <!-- show all suggestions made -->
-                                <div class="card-body">
-                                    <h5 class="card-title text-center" style="margin-bottom: 1rem;">Name Suggestions</h5>
-                                    <% if (plant.suggested_names.length > 0) { %>
-                                        <ul>
-                                            <% plant.suggested_names.forEach(suggestion => { %>
-                                                <li class="suggest-list">
-                                                    <div>
-                                                        <strong><%= suggestion.username %>:</strong>
-                                                        <span><%= suggestion.suggestedName %></span>
-                                                    </div>
-                                                    <% if (suggestion.suggestedName != plant.name) { %>
-                                                        <form action="/approve-suggestion" method="post", style="display: inline; float: inline-end;">
-                                                            <input type="hidden" name="plantID" value="<%= plant._id %>">
-                                                            <input type="hidden" name="suggestedName" value="<%= suggestion.suggestedName %>">
-                                                            <button type="submit">Approve</button>
-                                                        </form>
-                                                    <% } %>
-                                                </li>
-                                            <% }) %>
-                                        </ul>
-                                    <% } else { %>
-                                        <p>No suggestions for this plant yet.</p>
-                                    <% } %>
-                                </div>
 
+                        <div id="suggestion-panel">
+                            <button id="view-suggestion" class="btn btn-secondary mt-2">View Suggestions</button>
+                            <div class="overlay view-suggestion-overlay">
+                                <div class="view-suggestion-form card" style="width: 40rem; max-width: 95dvw; height: 50vh; overflow-y: auto; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                    <div class="card-header">
+                                        <button id="close-view-suggestions" type="button" class="btn-close" aria-label="Close"></button>
+                                    </div>
+                                    
+                                    <!-- show all suggestions made -->
+                                    <div class="card-body">
+                                        <h5 class="card-title text-center" style="margin-bottom: 1rem;">Name Suggestions</h5>
+                                        <% if (plant.suggested_names.length > 0) { %>
+                                            <ul>
+                                                <% plant.suggested_names.forEach(suggestion => { %>
+                                                    <li class="suggest-list">
+                                                        <div>
+                                                            <strong><%= suggestion.username %>:</strong>
+                                                            <span><%= suggestion.suggestedName %></span>
+                                                        </div>
+                                                        <% if (suggestion.suggestedName != plant.name) { %>
+                                                            <form action="/approve-suggestion" method="post", style="display: inline; float: inline-end;">
+                                                                <input type="hidden" name="plantID" value="<%= plant._id %>">
+                                                                <input type="hidden" name="suggestedName" value="<%= suggestion.suggestedName %>">
+                                                                <button class="btn btn-primary" type="submit">Approve</button>
+                                                            </form>
+                                                        <% } %>
+                                                    </li>
+                                                <% }) %>
+                                            </ul>
+                                        <% } else { %>
+                                            <p>No suggestions for this plant yet.</p>
+                                        <% } %>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     <% } %>
-                            
                 </div>
 
                 <div class="card-footer">
                     <p class="card-text mb-0"><span class="text-muted">Posted by</span> <%= plant.user %></p>
                     <p class="card-text">
-                        <span class="text-muted">On</span>
-                        <%= new Date(plant.date_time_added).toLocaleDateString() %>
+                        <span class="text-muted">Plant seen on</span>
+                        <%= new Date(plant.date_time_of_sighting).toLocaleDateString() %>
                         <span class="text-muted">at</span>
-                        <%= new Date(plant.date_time_added).toLocaleTimeString() %>
-                    </p>
-                    <p>
-                        <span class="text-muted">Identification:</span>
-                        <%= plant.identification_complete ? 'Complete' : 'In-progress' %>
+                        <%= new Date(plant.date_time_of_sighting).toLocaleTimeString() %>
                     </p>
                 </div>
             </div>
@@ -173,25 +166,26 @@
 </div>
 
 <script>
-    function toggleOverlay(displayStyle) {
-        document.querySelector(".overlay").style.display = displayStyle;
+    if ("<%= plant.identification_complete%>" === "false") {
+        document.getElementById("suggest-name").onclick = () => document.querySelector(".overlay").style.display = "block";
+        document.getElementById("close-suggest-name").onclick = () => document.querySelector(".overlay").style.display = "none";
+        
+        getCurrentUser().then(name => {
+            if (name === "<%- plant.user %>") {
+                document.getElementById("suggestion-panel").style.display = "block";
+            } else {
+                document.getElementById("suggestion-panel").style.display = "none";
+            }
+        })
+        
+        document.getElementById("view-suggestion").onclick = () => document.querySelector(".view-suggestion-overlay").style.display = "block";
+        document.getElementById("close-view-suggestions").onclick = () => document.querySelector(".view-suggestion-overlay").style.display = "none";
     }
-    document.getElementById("suggest-name").onclick = () => toggleOverlay("block");
-    document.getElementById("close-suggest-name").onclick = () => toggleOverlay("none");
 </script>
-
-<script>
-    function toggleViewSuggestionsOverlay(displayStyle) {
-        document.querySelector(".view-suggestion-overlay").style.display = displayStyle;
-    }
-    document.getElementById("view-suggestion").onclick = () => toggleViewSuggestionsOverlay("block");
-    document.getElementById("close-view-suggestions").onclick = () => toggleViewSuggestionsOverlay("none");
-</script>
-
 
 <script src="/javascripts/chat.js"></script>
 <script>
-    document.onload = connectToRoom('<%= plant.chat %>');
+    connectToRoom('<%= plant.chat %>');
     
     window.onbeforeunload = function() {
         const data = JSON.stringify({

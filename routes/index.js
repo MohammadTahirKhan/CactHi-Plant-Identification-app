@@ -84,11 +84,19 @@ router.post('/approve-suggestion', async (req, res, next) => {
 
 
 
-router.get('/view-plants', function(req, res, next) {
-  let result = plants.getAll(); // Assume this returns a Promise
+router.get('/view-plants', function(req, res, next) {  
+  let result = plants.getAll();
 
   result.then(async plants => {
     let data = JSON.parse(plants);
+    
+    if (req.query.json) {
+      res.json(plants);
+      return;
+    }
+    
+    if (req.query.mySubmissions) {
+      plants = plants.filter(plant => plant.user === req.query.username);
 
     const fetchDbpediaData = async (plant) => {
       const endpointUrl = 'http://dbpedia.org/sparql';
@@ -200,11 +208,35 @@ router.get('/view-plants/:uid', function(req, res, next) {
   })
 });
 
+router.get('/offline-detail', function(req, res, next) {
+  res.render('offline-detail', {title: 'Offline Plant Detail'});
+});
+
 
 router.post('/changeChat', (req, res, next) => {
   console.log(req.body);
   setImmediate(updateChat, req.body.plantID, req.body.historyChat);
   res.send('Chat update scheduled');
+});
+
+router.post('/sync-offline-chat', (req, res, next) => {
+  console.log(req);
+  plantModel.findById(req.body.plantID).then(plant => {
+      console.log(plant);
+      plant.chat += req.body.msg;
+      plant.save()
+          .then(() => {
+              res.send('Chat sync successful');
+          })
+          .catch(error => {
+              console.error(error);
+              res.status(500).send('Chat sync failed');
+          });
+  })
+  .catch(error => {
+      console.error(error);
+      res.status(500).send('Chat sync failed');
+  });
 });
 
 async function updateChat(plantID, historyChat) {

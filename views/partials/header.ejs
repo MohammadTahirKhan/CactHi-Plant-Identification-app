@@ -6,8 +6,11 @@
     <link rel='stylesheet' href='/stylesheets/style.css'>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/leaflet/leaflet.css">
+    <link rel="manifest" href="/manifest.json">
     <script src="/js/bootstrap.min.js"></script>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="/javascripts/idb-utils.js"></script>
+    <script src="/javascripts/index.js"></script>
     <title><%= title %></title>
 </head>
 
@@ -35,7 +38,7 @@
                         <a class="nav-link" href="/view-plants">View Plants</a>
                     </li>
                 </ul>
-                <span class="navbar-text">Hi, <span id="username">username</span></span>
+                <span class="navbar-text">Hi, <span id="username"></span></span>
             </div>
         </div>
     </nav>
