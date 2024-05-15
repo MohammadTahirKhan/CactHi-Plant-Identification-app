@@ -119,7 +119,28 @@
 
                     <div class="col">
                         <label for="image" class="form-label">Photo of plant</label>
-                        <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <input type="hidden" name="webcam" id="cam-input">
+                                <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
+                            </div>
+
+                            <div class="col">
+                                <button id="cam-overlay" class="btn btn-success w-100">📸 Use camera</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="overlay">
+                        <div class="overlay-card card" style="width: 40rem; max-width: 95dvw;">
+                            <div class="card-header">
+                                <button id="close-cam-overlay" type="button" class="btn-close" aria-label="Close"></button>
+                            </div>
+                            
+                            <video id="webcam" autoplay></video>
+                            <button id="capture" class="btn btn-success">Capture</button>
+                            <canvas id="canvas" style="display: none;"></canvas>
+                        </div>
                     </div>
                 </div>
 
@@ -144,5 +165,33 @@
             flowerColour.required = true;
         }
     }
+</script>
+<script>
+    const video = document.getElementById('webcam');
+    const canvas = document.getElementById('canvas');
+    const captureButton = document.getElementById('capture');
+
+    document.getElementById("cam-overlay").onclick = () => {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                    video.play();
+                });
+        }
+        document.querySelector(".overlay").style.display = "block";
+    }
+        
+    document.getElementById("close-cam-overlay").onclick = () => document.querySelector(".overlay").style.display = "none";
+
+    captureButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('image').disabled = true;
+        video.pause();
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        document.getElementById("cam-input").value = canvas.toDataURL('image/png');
+    });
 </script>
 <%- include('./partials/footer.ejs') %>
