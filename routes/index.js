@@ -7,7 +7,7 @@ var plantModel = require('../models/plants');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('index', {title: 'PLANTS!!!', data: data});
+  res.render('index', {title: 'PLANTS!!!'});
 });
 
 router.post('/suggest-name', async (req, res, next) => {
@@ -89,79 +89,13 @@ router.get('/view-plants', function(req, res, next) {
       return;
     }
     
+  
     if (req.query.mySubmissions) {
       data = data.filter(plant => plant.user === req.query.username);
     }
 
-    const fetchDbpediaData = async (plant) => {
-      const endpointUrl = 'http://dbpedia.org/sparql';
-      const sparqlQuery = `
-                PREFIX dbo: <http://dbpedia.org/ontology/>
-                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-                SELECT ?plant ?commonName ?description ?taxon
-                WHERE {
-                  VALUES ?commonName { "${plant.name}"@en }
-                  ?plant rdfs:label ?commonName;
-                         dbo:abstract ?description;
-                         dbp:taxon ?taxon.
-                  FILTER (lang(?description) = "en")
-                }
-            `;
-      const encodedQuery = encodeURIComponent(sparqlQuery);
-      const url = `${endpointUrl}?query=${encodedQuery}&format=json`;
-
-
-      let response = await fetch(url);
-      let json = await response.json();
-      let result = json.results.bindings[0];
-      return result ? {
-        dbpediaUri: result.plant.value,
-        commonName: result.commonName.value,
-        description: result.description.value,
-        taxon: result.taxon.value
-      } : {};
-
-    };
-
-    // Map over each plant, fetch its data from DBpedia, and merge the results
-    for (let i = 0; i < data.length; i++) {
-      let dbpediaData = await fetchDbpediaData(data[i]);
-
-      if (dbpediaData.taxon == undefined) {
-        data[i].taxon = "No Taxon Name Avalible";
-      } else {
-        data[i].taxon = dbpediaData.taxon;
-      }
-
-      if (dbpediaData.description == undefined) {
-        data[i].dbpedia = "No Description Avalible";
-      } else {
-        // If the description length is over 150 characters, then cut it off
-        // Uses a weird way to tdo it so it cuts off at the " " between words
-        if (dbpediaData.description.length > 150){
-          data[i].dbpedia = dbpediaData.description.slice(0,150+dbpediaData.description.slice(150,160).indexOf(" ")) + " ...";
-        }
-        else{
-          data[i].dbpedia = dbpediaData.description;
-
-        }
-
-      }
-
-      if (dbpediaData.dbpediaUri == undefined) {
-        data[i].uri = "No URI Avalible";
-      } else {
-        data[i].uri = dbpediaData.dbpediaUri;
-      }
-
-
-    }
-
-
-      // TODO: CHANGE TO CURRENT USER'S USERNAME
       if (req.query.mySubmissions) {
-        data = data.filter(plant => plant.user === "gardener123");
+        data = data.filter(plant => plant.user === req.query.username);
       }
 
       if (req.query.sort === 'oldest') {
@@ -195,10 +129,54 @@ router.get('/view-plants', function(req, res, next) {
     })
   });
 
+const fetchDbpediaData = async (plant) => {
+  const endpointUrl = 'http://dbpedia.org/sparql';
+  const sparqlQuery = `
+            PREFIX dbo: <http://dbpedia.org/ontology/>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+            SELECT ?plant ?commonName ?description ?taxon
+            WHERE {
+              VALUES ?commonName { "${plant.name}"@en }
+              ?plant rdfs:label ?commonName;
+                      dbo:abstract ?description;
+                      dbp:taxon ?taxon.
+              FILTER (lang(?description) = "en")
+            }
+        `;
+  const encodedQuery = encodeURIComponent(sparqlQuery);
+  const url = `${endpointUrl}?query=${encodedQuery}&format=json`;
+
+  let response = await fetch(url);
+  let json = await response.json();
+  let result = json.results.bindings[0];
+  return result ? {
+    dbpediaUri: result.plant.value,
+    commonName: result.commonName.value,
+    description: result.description.value,
+    taxon: result.taxon.value
+  } : {};
+};
+
+const updatePlantWithDbpediaData = async (plant) => {
+  let dbpediaData = await fetchDbpediaData(plant);
+
+  plant.taxon = dbpediaData.taxon || "No taxon available";
+  plant.dbpedia = dbpediaData.description 
+    ? dbpediaData.description.length > 150
+      ? dbpediaData.description.slice(0,150+dbpediaData.description.slice(150,160).indexOf(" ")) + " ..."
+      : dbpediaData.description
+    : "No DBpedia description available";
+  plant.uri = dbpediaData.dbpediaUri || "No DBpedia URI available";
+};
+
 router.get('/view-plants/:uid', function(req, res, next) {
-  plantModel.findById(req.params.uid).then(plant => {
+  plantModel.findById(req.params.uid).then(async plant => {
+    await updatePlantWithDbpediaData(plant);
     res.render('plant-detail', {title: `${plant.name} Details`, plant: plant});
-  })
+  }).catch(error => {
+    res.status(404).send('Plant not found');
+  });
 });
 
 router.get('/offline-detail', function(req, res, next) {

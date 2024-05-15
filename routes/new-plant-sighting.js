@@ -25,19 +25,10 @@ router.get('/',  function(req, res, next) {
 });
 
 router.post('/',upload.single('image'), async function (req, res) {
-    console.log(req.body.username);
-    console.log(req.body["plant_name"]);
-    console.log(req.body);
     let plantData = req.body;
     let filePath = req.file.filename;
-    let result = await plantsController.create(plantData, filePath);
-    console.log(result);
-    let all = plants.getAll()
-    all.then(students => {
-        let data = JSON.parse(students);
-        res.render('index', {title: "Success", data: data});
-    })
-
+    await plantsController.create(plantData, filePath);
+    res.redirect('/view-plants');
 });
 
 module.exports = router;

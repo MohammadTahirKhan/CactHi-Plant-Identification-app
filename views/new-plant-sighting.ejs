@@ -31,12 +31,12 @@
 
                         <div class="mb-2">
                             <label for="latitude" class="form-label">Latitude</label>
-                            <input type="number" name="latitude" id="latitude" class="form-control" required>
+                            <input type="number" name="latitude" id="latitude" class="form-control" step="any" required>
                         </div>
 
                         <div class="mb-2">
                             <label for="longitude" class="form-label">Longitude</label>
-                            <input type="number" name="longitude" id="longitude" class="form-control" required>
+                            <input type="number" name="longitude" id="longitude" class="form-control" step="any" required>
                         </div>
                     </div>
 
@@ -85,7 +85,7 @@
     
                     <div class="col">
                         <label for="flower_colour" class="form-label">If so, what colour were the flowers?</label>
-                        <input type="text" name="flower_colour" id="flower_colour" class="form-control">
+                        <input type="text" name="flower_colour" id="flower_colour" class="form-control" required>
                     </div>
                 </div>
 
@@ -132,4 +132,17 @@
 <script src="/leaflet/leaflet.js"></script>
 <script src="./javascripts/map.js"></script>
 <script src="./javascripts/new-plant.js"></script>
+<script>
+    const hasFlowers = document.getElementById('flowers');
+    const flowerColour = document.getElementById('flower_colour');
+    hasFlowers.onchange = function() {
+        if (hasFlowers.value === 'false') {
+            flowerColour.value = '';
+            flowerColour.disabled = true;
+        } else {
+            flowerColour.disabled = false;
+            flowerColour.required = true;
+        }
+    }
+</script>
 <%- include('./partials/footer.ejs') %>
