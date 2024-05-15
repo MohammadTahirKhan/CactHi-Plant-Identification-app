@@ -10,12 +10,13 @@ router.get('/', function (req, res, next) {
   res.render('index', {title: 'PLANTS!!!'});
 });
 
+// Suggest a name for a plant
 router.post('/suggest-name', async (req, res, next) => {
   try {
-    // Extract suggestion data from the request
+    // Extract suggestion data, plantId and user from the request
     const plantID = req.body.plantID;
     const suggestedName = req.body.suggestedName;
-    const username = 'gardener123'; // TODO: CHANGE TO CURRENT USER'S USERNAME
+    const username = req.body.user;
   
     // Retrieve the plant document 
     const plant = await plantModel.findById(plantID);
@@ -42,6 +43,7 @@ router.post('/suggest-name', async (req, res, next) => {
   }
 });
 
+// Approve a suggested name for a plant
 router.post('/approve-suggestion', async (req, res, next) => {
   try {
     // Extract suggestion data from the request
