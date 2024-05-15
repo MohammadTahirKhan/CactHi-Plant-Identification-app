@@ -84,6 +84,7 @@
                                 <!-- FORM FOR SUGGESTING A NEW NAME -->
                                 <form class="card-body" method="post" action="/suggest-name">
                                     <div class="form-floating mb-3">
+                                        <input type="text" name="user" id="user" class="form-control" hidden>
                                         <input type="text" class="form-control" name="plantID" id="plantID" value="<%= plant._id %>" hidden>
                                         <input type="text" class="form-control" name="suggestedName" id="suggestedName" placeholder="e.g. Rose">
                                         <label for="suggestedName">Name Suggestion</label>
@@ -168,6 +169,11 @@
     </div>
 </div>
 
+<script>
+    getCurrentUser().then((username) => {
+        document.querySelector('input[name="user"]').value = username;
+    });
+</script>
 <script>
     if ("<%= plant.identification_complete%>" === "false") {
         document.getElementById("suggest-name").onclick = () => document.querySelector(".overlay").style.display = "block";
