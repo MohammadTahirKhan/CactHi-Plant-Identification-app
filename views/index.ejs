@@ -1,44 +1,96 @@
-<%- include('./partials/header.ejs') %>
+<!DOCTYPE html>
 
-<h1><%= title %></h1>
-<p>Welcome to <%= title %></p>
+<html>
+<head>
 
-<label for="name" id="nameLabel">Enter Name:</label>
-<input type="text" id="name" name="name"><br><br>
-<label for="roomNo" style="display: none">RoomNo:</label>
-<input type="text" id="roomNo" name="roomNo" style="display: none"><br><br>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">.
 
-<p id="roomNo">Room ID</p>
-<div id="plant_list">
-<% data.forEach(plant => { %>
-    <p><strong>Name:</strong> <%= plant.name%></p>
-    <p><strong>Height</strong> <%= plant.height %></p>
-    <button id="connect" onclick="connectToRoom('<%= plant._id%>','<%= plant.chat%>')">Connect</button>
-    <hr>
-    <% }); %>
-    <hr>
+</head>
+
+<body class="bck" style="
+background-image: url(./images/landing-background.png);
+  /* Full height */
+  height: 100%;
+  /* Center and scale the image nicely */
+  background-repeat: no-repeat;
+  background-size: cover;
+ z-index: 1;">
+
+<p style="  position: absolute;
+  top: 40%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  height:10%;
+  width:20%;
+
+">[site name]</p>
+<button type="button" class="btn btn-outline-dark" onclick="showLogin()" style="  position: absolute;
+  top: 50%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  height:10%;
+  width:20%;
+"><b>Submit Plants</b></button>
+
+<script>
+    function showLogin() {
+        document.getElementById("overlay").style.width = "100%";
+        document.getElementById("main").style.marginLeft = "100%";
+        document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+    }
+    function hideLogin() {
+        document.getElementById("overlay").style.width = "0%";
+        document.getElementById("main").style.marginLeft = "0%";
+        document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+    }
+
+</script>
+<div id="overlay" class="overlay" style=" height: 100%;
+  width: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0,0,0,.5);
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.5s;">
+        <form action="/landing-page">
+        <div class="form-group" style="padding-bottom: 10px">
+            <input type="text"  class="form-control"  placeholder="Username..." name="username" style="
+           margin: 0;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 20%;
+          font-size:20px;
+          -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);">
+        </div>
+        <button type="submit" onclick="hideLogin()" class="btn btn-outline-light"  class="text-center" style= " margin: 0;
+          position: absolute;
+          top: 60%;
+          left: 50%;
+          width: 5%;
+          height: 5%;
+          -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+            </svg>
+        </button></form>
+
+
+    <button type="button" onclick="hideLogin()" class="btn btn-outline-light" style="
+    position: absolute;
+    right:    5%;
+    bottom:   5%;
+          ">Go Back
+    </button>
 </div>
 
-<div id="chat_interface" style="display: none">
-  <div>
-    <div id="who_you_are" style="display: inline"></div>, you are in room: <div id="in_room" style="display: inline"></div>
-  </div>
-  <div id="history" class="boxed"></div>
-  <div id="input" class="bottom boxed">
-    <form onsubmit="return false;" style="width: 100%">
-      <p>
-
-        <input type="text" id="chat_input" name="chat_input" style="width: 80%">
-        <button id="chat_send" onclick="sendChatText()">Send</button>
-      </p>
-    </form>
-  </div>
-</div>
+</body>
 
 
-<form action="/changeChat" method="POST" enctype="application/x-www-form-urlencoded">
-  <input type="text" id="historyChat" name="historyChat" style="display: none">
-  <button id="BackButton" type="submit" style="display: none">Back</button>
-</form>
-
-<%- include('./partials/footer.ejs') %>
+</html>

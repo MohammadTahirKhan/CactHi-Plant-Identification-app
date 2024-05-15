@@ -84,44 +84,123 @@ router.post('/approve-suggestion', async (req, res, next) => {
 
 
 
-router.get('/view-plants', function(req, res, next) {
-  plants.getAll().then(plants => {
-    plants = JSON.parse(plants);
+router.get('/view-plants', function(req, res, next) {  
+  let result = plants.getAll();
 
+  result.then(async plants => {
+    let data = JSON.parse(plants);
+    
     if (req.query.json) {
       res.json(plants);
       return;
     }
-
+    
     if (req.query.mySubmissions) {
       plants = plants.filter(plant => plant.user === req.query.username);
+
+    const fetchDbpediaData = async (plant) => {
+      const endpointUrl = 'http://dbpedia.org/sparql';
+      const sparqlQuery = `
+                PREFIX dbo: <http://dbpedia.org/ontology/>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+                SELECT ?plant ?commonName ?description ?taxon
+                WHERE {
+                  VALUES ?commonName { "${plant.name}"@en }
+                  ?plant rdfs:label ?commonName;
+                         dbo:abstract ?description;
+                         dbp:taxon ?taxon.
+                  FILTER (lang(?description) = "en")
+                }
+            `;
+      const encodedQuery = encodeURIComponent(sparqlQuery);
+      const url = `${endpointUrl}?query=${encodedQuery}&format=json`;
+
+
+      let response = await fetch(url);
+      let json = await response.json();
+      let result = json.results.bindings[0];
+      return result ? {
+        dbpediaUri: result.plant.value,
+        commonName: result.commonName.value,
+        description: result.description.value,
+        taxon: result.taxon.value
+      } : {};
+
+    };
+
+    // Map over each plant, fetch its data from DBpedia, and merge the results
+    for (let i = 0; i < data.length; i++) {
+      let dbpediaData = await fetchDbpediaData(data[i]);
+      //console.log(dbpediaData);
+
+      console.log(dbpediaData.dbpediaUri);
+      if (dbpediaData.taxon == undefined) {
+        data[i].taxon = "No Taxon Name Avalible";
+      } else {
+        data[i].taxon = dbpediaData.taxon;
+      }
+
+      if (dbpediaData.description == undefined) {
+        data[i].dbpedia = "No Description Avalible";
+      } else {
+        // If the description length is over 150 characters, then cut it off
+        // Uses a weird way to tdo it so it cuts off at the " " between words
+        if (dbpediaData.description.length > 150){
+          data[i].dbpedia = dbpediaData.description.slice(0,150+dbpediaData.description.slice(150,160).indexOf(" ")) + " ...";
+        }
+        else{
+          data[i].dbpedia = dbpediaData.description;
+
+        }
+
+      }
+
+      if (dbpediaData.dbpediaUri == undefined) {
+        data[i].uri = "No URI Avalible";
+      } else {
+        data[i].uri = dbpediaData.dbpediaUri;
+      }
+
+
     }
 
-    if (req.query.sort === 'oldest') {
-      plants.sort((a, b) => new Date(a.date_time_of_sighting) - new Date(b.date_time_of_sighting));
 
-    } else if (req.query.sort === 'unidentified') {
-      plants.sort((a, b) => a.identification_complete - b.identification_complete);
+      // TODO: CHANGE TO CURRENT USER'S USERNAME
+      if (req.query.mySubmissions) {
+        data = data.filter(plant => plant.user === "gardener123");
+      }
 
-    } else if (req.query.sort === 'closest' || req.query.sort === 'farthest') {
-      location = req.query.location.split(',');
-      plants.sort((a, b) => {
-        aDistance = Math.sqrt(Math.pow(a.latitude - location[0], 2) + Math.pow(a.longitude - location[1], 2));
-        bDistance = Math.sqrt(Math.pow(b.latitude - location[0], 2) + Math.pow(b.longitude - location[1], 2));
+      if (req.query.sort === 'oldest') {
+        data.sort((a, b) => new Date(a.date_time_of_sighting) - new Date(b.date_time_of_sighting));
 
-        if (req.query.sort === 'closest')
-          return aDistance - bDistance;
+      } else if (req.query.sort === 'unidentified') {
+        data.sort((a, b) => a.identification_complete - b.identification_complete);
 
-        return bDistance - aDistance;
+      } else if (req.query.sort === 'closest' || req.query.sort === 'farthest') {
+        location = req.query.location.split(',');
+        data.sort((a, b) => {
+          aDistance = Math.sqrt(Math.pow(a.latitude - location[0], 2) + Math.pow(a.longitude - location[1], 2));
+          bDistance = Math.sqrt(Math.pow(b.latitude - location[0], 2) + Math.pow(b.longitude - location[1], 2));
+
+          if (req.query.sort === 'closest')
+            return aDistance - bDistance;
+
+          return bDistance - aDistance;
+        });
+
+      } else {
+        data.sort((a, b) => new Date(b.date_time_of_sighting) - new Date(a.date_time_of_sighting));
+      }
+
+      res.render('view-all-plants', {
+        title: 'View All Plants',
+        plants: data,
+        sort: req.query.sort,
+        mySubmissions: req.query.mySubmissions
       });
-      
-    } else {
-      plants.sort((a, b) => new Date(b.date_time_of_sighting) - new Date(a.date_time_of_sighting));
-    }
-
-    res.render('view-all-plants', {title: 'View All Plants', plants: plants, sort: req.query.sort, mySubmissions: req.query.mySubmissions});
-  })
-});
+    })
+  });
 
 router.get('/view-plants/:uid', function(req, res, next) {
   plantModel.findById(req.params.uid).then(plant => {
