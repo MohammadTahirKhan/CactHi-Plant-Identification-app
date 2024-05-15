@@ -14,7 +14,7 @@ const createPlantCard = (plant) => {
 
     plantCard.className = "col-12 col-md-6 col-lg-4 mb-4";
     plantCard.innerHTML = `
-        <a class="card" href="/view-plants/${plant._id}" style="text-decoration: none;">
+        <a class="card" href="/offline-detail?id=${plant._id}" style="text-decoration: none;">
             <img class="card-img-top img-fluid" src="${URL.createObjectURL(plant.image)}" alt="Picture of ${plant.name}" />
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -41,15 +41,12 @@ const createPlantCard = (plant) => {
 // If online, relies on server to populate the page with plants.
 // Updates plants in the IDB with the server's plants.
 if (navigator.onLine) {
-    console.log("Online mode");
-
     fetch("/view-plants?json=on")
         .then((response) => response.json())
         .then(async (serverPlants) => {
-            console.log("Updating plants in IDB");
-
             let idbPlants = await getAllIDBPlants();
 
+            console.log("[SW] Syncing plants")
             for (let serverPlant of serverPlants) {
                 let idbPlant = idbPlants.find((idbPlant) => idbPlant._id === serverPlant._id);
 
@@ -66,11 +63,9 @@ if (navigator.onLine) {
             }
         });
 
-    // If offline, populates the page with plants from the IDB.
-    // Plants that are created while offline are also displayed.
+// If offline, populates the page with plants from the IDB.
+// Plants that are created while offline are also displayed.
 } else {
-    console.log("Offline mode");
-
     const plantsDiv = document.getElementById("plants");
     plantsDiv.innerHTML = "";
     plantsDiv.dataset.masonry = "";

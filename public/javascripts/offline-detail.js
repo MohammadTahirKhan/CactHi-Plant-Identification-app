@@ -80,37 +80,45 @@ const sendChatText = async () => {
     const chatInput = document.getElementById("chat_input");
     if (!chatInput.value) return;
 
-    const newMessage = document.createElement('p');
-    const history = document.getElementById('history');
-    const historyInput = document.getElementById('historyChat');
+    writeOnHistory(username, chatInput.value);    
+    await updateChat(plantObj._id, `${username}|${chatInput.value}||`);
     
-    newMessage.className = "current-user-message";
-    newMessage.innerHTML = `${chatInput.value}`;
-    history.appendChild(newMessage);
-    historyInput.value += `${username}|${chatInput.value}||`;
-    
-    plantObj.chat += document.getElementById('historyChat').value;
     chatInput.value = '';
-    await updatePlant(plantObj);
 }
 
-window.onbeforeunload = async () => {
-    addPlantToSyncQueue(plantObj);
-    console.log("Updated plant");
-};
+const writeOnHistory = (user, message) => {
+    const history = document.getElementById('history');
+    const newMessage = document.createElement('p');
+
+    if (user === username) {
+        newMessage.className = "current-user-message";
+        newMessage.innerHTML = `${message}`;
+    } else {
+        newMessage.innerHTML = `<strong>${user}</strong>: ${message}`;
+    }
+
+    history.appendChild(newMessage);
+}
 
 const params = new URLSearchParams(window.location.search);
-const id = params.get('id');
 var username = null;
 var plantObj = null;
-
-console.log("Offline mode");
 
 getCurrentUser().then((user) => {
     username = user;
 });
 
-getPlant(id).then((plant) => {
+getPlant(params.get('id')).then((plant) => {
     plantObj = plant;
-    createPlantCard(plant);
+    createPlantCard(plantObj);
+
+    if (plantObj.chat) {
+        const messages = plantObj.chat.split('||');
+        messages.forEach(message => {
+            const [user, text] = message.split('|');
+            if (user && text) {
+                writeOnHistory(user, text);
+            }
+        });
+    }
 });

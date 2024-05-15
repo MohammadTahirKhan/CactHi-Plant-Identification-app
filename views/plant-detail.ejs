@@ -166,29 +166,22 @@
 </div>
 
 <script>
-    function toggleOverlay(displayStyle) {
-        document.querySelector(".overlay").style.display = displayStyle;
+    if ("<%= plant.identification_complete%>" === "false") {
+        document.getElementById("suggest-name").onclick = () => document.querySelector(".overlay").style.display = "block";
+        document.getElementById("close-suggest-name").onclick = () => document.querySelector(".overlay").style.display = "none";
+        
+        getCurrentUser().then(name => {
+            if (name === "<%- plant.user %>") {
+                document.getElementById("suggestion-panel").style.display = "block";
+            } else {
+                document.getElementById("suggestion-panel").style.display = "none";
+            }
+        })
+        
+        document.getElementById("view-suggestion").onclick = () => document.querySelector(".view-suggestion-overlay").style.display = "block";
+        document.getElementById("close-view-suggestions").onclick = () => document.querySelector(".view-suggestion-overlay").style.display = "none";
     }
-    document.getElementById("suggest-name").onclick = () => toggleOverlay("block");
-    document.getElementById("close-suggest-name").onclick = () => toggleOverlay("none");
 </script>
-
-<script>
-    getCurrentUser().then(name => {
-        if (name === "<%- plant.user %>") {
-            document.getElementById("suggestion-panel").style.display = "block";
-        } else {
-            document.getElementById("suggestion-panel").style.display = "none";
-        }
-    })
-
-    function toggleViewSuggestionsOverlay(displayStyle) {
-        document.querySelector(".view-suggestion-overlay").style.display = displayStyle;
-    }
-    document.getElementById("view-suggestion").onclick = () => toggleViewSuggestionsOverlay("block");
-    document.getElementById("close-view-suggestions").onclick = () => toggleViewSuggestionsOverlay("none");
-</script>
-
 
 <script src="/javascripts/chat.js"></script>
 <script>

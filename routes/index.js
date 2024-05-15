@@ -140,6 +140,26 @@ router.post('/changeChat', (req, res, next) => {
   res.send('Chat update scheduled');
 });
 
+router.post('/sync-offline-chat', (req, res, next) => {
+  console.log(req);
+  plantModel.findById(req.body.plantID).then(plant => {
+      console.log(plant);
+      plant.chat += req.body.msg;
+      plant.save()
+          .then(() => {
+              res.send('Chat sync successful');
+          })
+          .catch(error => {
+              console.error(error);
+              res.status(500).send('Chat sync failed');
+          });
+  })
+  .catch(error => {
+      console.error(error);
+      res.status(500).send('Chat sync failed');
+  });
+});
+
 async function updateChat(plantID, historyChat) {
   await plants.updateField(plantID, 'chat', historyChat);
 }

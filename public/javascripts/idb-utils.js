@@ -15,7 +15,6 @@ const openIDB = (storeName, mode) => {
 
         request.addEventListener("upgradeneeded", () => {
             const db = request.result;
-            console.log("Upgrading IndexedDB");
 
             db.createObjectStore("username", {
                 keyPath: "username",
@@ -28,6 +27,11 @@ const openIDB = (storeName, mode) => {
             });
 
             db.createObjectStore("sync-queue", {
+                keyPath: "_id",
+                autoIncrement: true,
+            });
+
+            db.createObjectStore("chat-sync-queue", {
                 keyPath: "_id",
                 autoIncrement: true,
             });
@@ -66,8 +70,44 @@ const updatePlant = async (plant) => {
 };
 
 /**
- * Gets a plant from the 'plants' store with the specified id.
- * @param {number} id - id of the plant to get
+ * Appends a message to the chat for the specified plant.
+ * Adds the plant to the chat-sync-queue store and notifies the service worker to sync.
+ * Then updates the chat in the plant store.
+ * @param {string} _id - ID of the plant to update the chat for
+ * @param {string} msg - message to add to the chat
+ */
+const updateChat = async (_id, msg) => {
+    const store = await openIDB("chat-sync-queue", "readwrite");
+    const request = store.get(_id);
+
+    request.onsuccess = async function (event) {
+        let chat = event.target.result;
+
+        if (chat) {
+            chat.chat += msg;
+        } else {
+            chat = { _id: _id, chat: msg };
+        }
+        store.put(chat);
+
+        navigator.serviceWorker.ready.then((registration) => {
+            registration.sync.register("sync-chats");
+        });
+
+        const plantStore = await openIDB("plants", "readwrite");
+        const plantRequest = plantStore.get(_id);
+
+        plantRequest.onsuccess = function (event) {
+            const plant = event.target.result;
+            plant.chat += msg;
+            plantStore.put(plant);
+        };
+    };
+};
+
+/**
+ * Gets a plant from the IDB with the specified id.
+ * @param {string} id - id of the plant to get
  * @returns {Promise<Object>} The plant with the specified id
  */
 const getPlant = async (id) => {
@@ -92,8 +132,7 @@ const getPlant = async (id) => {
  */
 const addPlantToSyncQueue = async (plant) => {
     const store = await openIDB("sync-queue", "readwrite");
-    store.add(plant);
-    console.log("Plant added to sync queue");
+    store.put(plant);
 
     navigator.serviceWorker.ready.then((registration) => {
         registration.sync.register("sync-plants");
@@ -102,10 +141,30 @@ const addPlantToSyncQueue = async (plant) => {
 
 /**
  * Gets all plants in the 'sync-queue' store.
- * @returns {Promise<Array<Object>>} - All plants in the 'sync-queue' store
+ * @returns {Promise<Array<Object>>} All plants in the 'sync-queue' store
  */
 const getAllPlantsToSync = async () => {
     const store = await openIDB("sync-queue", "readonly");
+
+    return new Promise((resolve, reject) => {
+        const request = store.getAll();
+
+        request.onsuccess = function (event) {
+            resolve(event.target.result);
+        };
+
+        request.onerror = function (event) {
+            reject(event.target.error);
+        };
+    });
+};
+
+/**
+ * Gets all plants in the 'chat-sync-queue' store.
+ * @returns {Promise<Array<Object>>} All plants in the 'sync-queue' store
+ */
+const getAllChatsToSync = async () => {
+    const store = await openIDB("chat-sync-queue", "readonly");
 
     return new Promise((resolve, reject) => {
         const request = store.getAll();

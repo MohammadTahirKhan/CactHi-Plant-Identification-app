@@ -13,14 +13,16 @@ const registerSW = async () => {
             scope: "/",
         });
         if (registration.installing) {
-            console.log("Service worker installing");
+            console.log("[SW] Installing");
         }
         if (registration.waiting) {
-            console.log("Service worker installed");
+            console.log("[SW] Installed");
         }
         if (registration.active) {
-            console.log("Service worker active");
+            console.log("[SW] Active");
         }
+
+        console.log("[SW] Online mode: ", navigator.onLine);
     }
 };
 
