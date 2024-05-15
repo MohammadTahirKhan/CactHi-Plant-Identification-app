@@ -212,6 +212,7 @@ const getCurrentUser = async () => {
         request.onsuccess = function (event) {
             if (event.target.result.length === 0) {
                 reject("No user found");
+                return;
             }
 
             resolve(event.target.result[0].username);

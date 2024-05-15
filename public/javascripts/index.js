@@ -31,14 +31,18 @@ window.onload = () => {
 
     // If the user is not on the landing page, populate the navbar with the current user's username.
     // If a username is not found, redirect the user to the landing page to add one.
-    if (window.location.pathname !== "/landing-page") {
-        getCurrentUser()
-            .then((username) => {
-                document.getElementById("username").innerText = username;
-            })
 
-            .catch(() => {
+    getCurrentUser()
+        .then((username) => {
+            if (window.location.pathname === "/") {
                 window.location.href = "/landing-page";
-            });
-    }
+            } else {
+                document.getElementById("username").innerText = username;
+            }
+        })
+        .catch(() => {
+            if (window.location.pathname !== "/") {
+                window.location.href = "/";
+            }
+        });
 };

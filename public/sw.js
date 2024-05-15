@@ -9,6 +9,7 @@ self.addEventListener("install", (event) => {
             try {
                 await cache.addAll([
                     "/",
+                    "/landing-page",
                     "/view-plants",
                     "/new-plant-sighting",
                     '/offline-detail',
@@ -29,7 +30,7 @@ self.addEventListener("install", (event) => {
                     "/javascripts/offline-detail.js",
                     "/javascripts/view-all-plants.js",
 
-                    "/images/yuh.png",
+                    "/images/cactusfriend.png",
                 ]);
             } catch (error) {
                 console.error("[SW] Error caching assets:", error);

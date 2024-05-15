@@ -5,6 +5,8 @@
 
     <title><%= title %></title>
     <link rel="stylesheet" href="./css/bootstrap.min.css">.
+    <script src="/javascripts/idb-utils.js"></script>
+    <script src="/javascripts/index.js"></script>
 
 </head>
 
@@ -57,7 +59,7 @@ background-image: url(./images/landing-background.png);
   overflow-x: hidden;
   padding-top: 60px;
   transition: 0.5s;">
-        <form action="/landing-page">
+        <form action="/landing-page" id="username-form">
         <div class="form-group" style="padding-bottom: 10px">
             <input type="text"  class="form-control"  placeholder="Username..." name="username" style="
            margin: 0;
@@ -90,7 +92,18 @@ background-image: url(./images/landing-background.png);
     </button>
 </div>
 
+<script>
+  const form = document.getElementById('username-form');
+  form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const username = form.username.value;
+
+      addData('username', { username: username }).then(() => {
+          console.log('Added username to IndexedDB');
+          window.location.href = '/view-plants';
+      });
+  });
+</script>
+
 </body>
-
-
 </html>

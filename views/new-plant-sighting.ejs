@@ -21,24 +21,27 @@
 
                 <div class="row mb-2">
                     <div class="col-lg-4">
-                        <p>Place a marker on the map to select the latitude and longitude of the plant.</p>
-                        <p>Alternatively, use GPS to get your current location.</p>
-
-                        <button id="use-cur-location" class="btn btn-success mb-2" type="button">📍Use my current location</button>
+                        <p>Enter the location of the plant via one of the following methods:</p>
+                        <ul>
+                            <li>Select a point on the map,</li>
+                            <li>Enter coordinates manually</li>
+                        </ul>
+                        <p>Or</p>
+                        <button id="use-cur-location" class="btn btn-success mb-2" type="button">📍Use your current location</button>
 
                         <div class="mb-2">
                             <label for="latitude" class="form-label">Latitude</label>
-                            <input type="number" name="latitude" id="latitude" class="form-control" readonly required>
+                            <input type="number" name="latitude" id="latitude" class="form-control" required>
                         </div>
 
                         <div class="mb-2">
                             <label for="longitude" class="form-label">Longitude</label>
-                            <input type="number" name="longitude" id="longitude" class="form-control" readonly required>
+                            <input type="number" name="longitude" id="longitude" class="form-control" required>
                         </div>
                     </div>
 
                     <div class="col">
-                        <div id="map" style="height: 20rem;"></div>
+                        <div id="map" style="height: 100%; min-height: 20rem;"></div>
                     </div>
                 </div>
 

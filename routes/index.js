@@ -7,13 +7,7 @@ var plantModel = require('../models/plants');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  let result = plants.getAll()
-  result.then(students => {
-    let data = JSON.parse(students);
-    //console.log(data)
-    res.render('index', {title: 'PLANTS!!!', data: data});
-
-  })
+  res.render('index', {title: 'PLANTS!!!', data: data});
 });
 
 router.post('/suggest-name', async (req, res, next) => {
@@ -91,12 +85,13 @@ router.get('/view-plants', function(req, res, next) {
     let data = JSON.parse(plants);
     
     if (req.query.json) {
-      res.json(plants);
+      res.json(data);
       return;
     }
     
     if (req.query.mySubmissions) {
-      plants = plants.filter(plant => plant.user === req.query.username);
+      data = data.filter(plant => plant.user === req.query.username);
+    }
 
     const fetchDbpediaData = async (plant) => {
       const endpointUrl = 'http://dbpedia.org/sparql';
@@ -132,9 +127,7 @@ router.get('/view-plants', function(req, res, next) {
     // Map over each plant, fetch its data from DBpedia, and merge the results
     for (let i = 0; i < data.length; i++) {
       let dbpediaData = await fetchDbpediaData(data[i]);
-      //console.log(dbpediaData);
 
-      console.log(dbpediaData.dbpediaUri);
       if (dbpediaData.taxon == undefined) {
         data[i].taxon = "No Taxon Name Avalible";
       } else {
@@ -214,15 +207,12 @@ router.get('/offline-detail', function(req, res, next) {
 
 
 router.post('/changeChat', (req, res, next) => {
-  console.log(req.body);
   setImmediate(updateChat, req.body.plantID, req.body.historyChat);
   res.send('Chat update scheduled');
 });
 
 router.post('/sync-offline-chat', (req, res, next) => {
-  console.log(req);
   plantModel.findById(req.body.plantID).then(plant => {
-      console.log(plant);
       plant.chat += req.body.msg;
       plant.save()
           .then(() => {
