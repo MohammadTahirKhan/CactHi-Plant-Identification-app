@@ -8,7 +8,7 @@
 4. M Tahir Khan
 
 ## Introduction
-This repository contains the code for the Intelligent Web Assignment for the COM3504 module at the University of Sheffield. The assignment is to create a progressive web application for "Plant Recognition" which could fascilitate recording and viewing of plant species. The application promotes community engagement, learning about plant species, sharing knowledge, and helping to identify plants in the wild.
+This repository contains the code for the Intelligent Web Assignment for the COM3504 module at the University of Sheffield. The assignment is to create a progressive web application for "Plant Recognition" which could facilitate recording and viewing of plant species. The application promotes community engagement, learning about plant species, sharing knowledge, and helping to identify plants in the wild.
 
 ## Dependencies
 * Node.JS
@@ -31,5 +31,5 @@ This repository contains the code for the Intelligent Web Assignment for the COM
 5. View a particular plant sighting in more details
 6. Chat Room for the users to discuss plant species, sightings, and identification of a particular plant
 7. Plant name suggestions for identification, and approval by the plant creator
-8. Fetching information from DBpedia when viewing a particular plant, including: plant description, common name and the URI
+8. Fetching information from DBpedia when viewing a particular plant, including plant description, common name, and the URI
 9. Offline support for the application, with the ability to create, view plant sightings, and send messages in the chat room of a particular plant sighting without an internet connection
