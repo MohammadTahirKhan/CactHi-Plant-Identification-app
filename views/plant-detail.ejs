@@ -87,8 +87,8 @@
 
                                 <form action="/suggest-name" method="post">
                                     <div class="modal-body">
+                                        <input type="text" name="user" id="user" class="form-control" hidden>
                                         <input type="hidden" name="plantID" id="plantID" value="<%= plant._id %>">
-
                                         <input type="text" class="form-control" name="suggestedName" id="suggestedName" placeholder="e.g. Rose" required>
                                     </div>
 
@@ -173,6 +173,11 @@
     </div>
 </div>
 
+<script>
+    getCurrentUser().then((username) => {
+        document.querySelector('input[name="user"]').value = username;
+    });
+</script>
 <script>
     if ("<%= plant.identification_complete%>" === "false") {
         getCurrentUser().then(name => {
