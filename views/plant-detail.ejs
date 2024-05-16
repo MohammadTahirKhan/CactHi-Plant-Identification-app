@@ -1,168 +1,173 @@
 <%- include('./partials/header.ejs') %>
 
-<div class="container">
-    <div class="row gy-4">
-        <div class="col-lg-4">
-            <div class="card">
-                <img class="card-img-top object-fit-cover" src="/images/uploads/<%- plant.image %>" alt="Picture of <%- plant.name %>"/>
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="card-title"><%= plant.name %> <span class="fs-5 fst-italic fw-normal">(<%- plant.taxon %>)</span></h4>
-                        <% if (plant.identification_complete) { %>
-                            <div class="badge text-bg-success tooltip-button">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
-                                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
-                                </svg>
-                                <span class="tooltip-text bg-dark text-light rounded p-2">Identification complete</span>
-                            </div>
-                            <% } %>
+<div class="row gy-4">
+    <div class="col-lg-4">
+        <div class="card">
+            <img class="card-img-top object-fit-cover" src="/images/uploads/<%- plant.image %>" alt="Picture of <%- plant.name %>"/>
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="card-title"><%= plant.name %> <span class="fs-5 fst-italic fw-normal">(<%- plant.taxon %>)</span></h4>
+                    <% if (plant.identification_complete) { %>
+                        <div class="badge text-bg-success tooltip-button">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16">
+                                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                            </svg>
+                            <span class="tooltip-text bg-dark text-light rounded p-2">Identification complete</span>
                         </div>
-                        
-                    <h6 class="card-subtitle text-muted mb-2"><%= plant.latitude %>&deg; N, <%= plant.longitude %>&deg; W</h6>
-                    <p class="card-text"><%- plant.description %></p>
-                    <p class="card-text fst-italic"><%- plant.dbpedia %></p>
-                    <p class="card-text text-subtitle"><a class="link-success" href="<%= plant.uri %>"><%- plant.uri %></a></p>
-           
-                    <div id="map" class="my-3" style="height: 10rem; border-radius: 0.375rem;"></div>
-                        
-                    <div class="row row-cols-2 row-cols-lg-3 text-center g-2 mb-4">
-                        <div class="col">
-                            <div class="border rounded align-self-center p-2">
-                                <p class="mb-0 text-muted">Height</p>
-                                <p class="mb-0"><%= plant.height %></p>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="border rounded align-self-center p-2">
-                                <p class="mb-0 text-muted">Spread</p>
-                                <p class="mb-0"><%= plant.spread %></p>
-                            </div>
-                        </div>
-                        <% if (plant.flowers) { %>
-                            <div class="col">
-                                <div class="border rounded align-self-center p-2">
-                                    <p class="mb-0 text-muted">Flower Colour</p>
-                                    <p class="mb-0"><%= plant.flower_colour %></p>
-                                </div>
-                            </div>
-                        <% } else { %>
-                            <div class="col">
-                                <div class="border rounded align-self-center p-2">
-                                    <p class="mb-0 text-muted">Flowers?</p>
-                                    <p class="mb-0">No</p>
-                                </div>
-                            </div>
                         <% } %>
-                        <div class="col">
-                            <div class="border rounded align-self-center p-2">
-                                <p class="mb-0 text-muted">Sun Exposure</p>
-                                <p class="mb-0"><%= plant.sun_exposure %></p>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="border rounded align-self-center p-2">
-                                <p class="mb-0 text-muted">Seeds/Fruit?</p>
-                                <p class="mb-0"><%= plant.seeds_or_fruit ? 'Yes' : 'No' %></p>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="border rounded align-self-center p-2">
-                                <p class="mb-0 text-muted">Leaves?</p>
-                                <p class="mb-0"><%= plant.leaves ? 'Yes' : 'No' %></p>
-                            </div>
+                    </div>
+                    
+                <h6 class="card-subtitle text-muted mb-2"><%= plant.latitude %>&deg; N, <%= plant.longitude %>&deg; W</h6>
+                <p class="card-text"><%- plant.description %></p>
+                <p class="card-text fst-italic"><%- plant.dbpedia %></p>
+                <p class="card-text text-subtitle"><a class="link-success" href="<%= plant.uri %>"><%- plant.uri %></a></p>
+        
+                <div id="map" class="my-3" style="height: 10rem; border-radius: 0.375rem;"></div>
+                    
+                <div class="row row-cols-2 row-cols-lg-3 text-center g-2 mb-4">
+                    <div class="col">
+                        <div class="border rounded align-self-center p-2">
+                            <p class="mb-0 text-muted">Height</p>
+                            <p class="mb-0"><%= plant.height %></p>
                         </div>
                     </div>
-
-                    <% if (!plant.identification_complete) { %>
-                        <button id="suggest-name" class="btn btn-secondary">Suggest Name</button>
-                        <div class="overlay">
-                            <div class="overlay-card card" style="width: 25rem; max-width: 95dvw;">
-                                <div class="card-header">
-                                    <button id="close-suggest-name" type="button" class="btn-close" aria-label="Close"></button>
-                                </div>
-                                
-                                <!-- FORM FOR SUGGESTING A NEW NAME -->
-                                <form class="card-body" method="post" action="/suggest-name">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" name="plantID" id="plantID" value="<%= plant._id %>" hidden>
-                                        <input type="text" class="form-control" name="suggestedName" id="suggestedName" placeholder="e.g. Rose">
-                                        <label for="suggestedName">Name Suggestion</label>
-                                    </div>                                  
-                                    <button type="submit" class="btn btn-primary w-100">Submit</button>
-                                </form>
+                    <div class="col">
+                        <div class="border rounded align-self-center p-2">
+                            <p class="mb-0 text-muted">Spread</p>
+                            <p class="mb-0"><%= plant.spread %></p>
+                        </div>
+                    </div>
+                    <% if (plant.flowers) { %>
+                        <div class="col">
+                            <div class="border rounded align-self-center p-2">
+                                <p class="mb-0 text-muted">Flower Colour</p>
+                                <p class="mb-0"><%= plant.flower_colour %></p>
                             </div>
                         </div>
-
-                        <div id="suggestion-panel">
-                            <button id="view-suggestion" class="btn btn-secondary mt-2">View Suggestions</button>
-                            <div class="overlay view-suggestion-overlay">
-                                <div class="view-suggestion-form card" style="width: 40rem; max-width: 95dvw; height: 50vh; overflow-y: auto; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                                    <div class="card-header">
-                                        <button id="close-view-suggestions" type="button" class="btn-close" aria-label="Close"></button>
-                                    </div>
-                                    
-                                    <!-- show all suggestions made -->
-                                    <div class="card-body">
-                                        <h5 class="card-title text-center" style="margin-bottom: 1rem;">Name Suggestions</h5>
-                                        <% if (plant.suggested_names.length > 0) { %>
-                                            <ul>
-                                                <% plant.suggested_names.forEach(suggestion => { %>
-                                                    <li class="suggest-list">
-                                                        <div>
-                                                            <strong><%= suggestion.username %>:</strong>
-                                                            <span><%= suggestion.suggestedName %></span>
-                                                        </div>
-                                                        <% if (suggestion.suggestedName != plant.name) { %>
-                                                            <form action="/approve-suggestion" method="post", style="display: inline; float: inline-end;">
-                                                                <input type="hidden" name="plantID" value="<%= plant._id %>">
-                                                                <input type="hidden" name="suggestedName" value="<%= suggestion.suggestedName %>">
-                                                                <button class="btn btn-primary" type="submit">Approve</button>
-                                                            </form>
-                                                        <% } %>
-                                                    </li>
-                                                <% }) %>
-                                            </ul>
-                                        <% } else { %>
-                                            <p>No suggestions for this plant yet.</p>
-                                        <% } %>
-                                    </div>
-                                </div>
+                    <% } else { %>
+                        <div class="col">
+                            <div class="border rounded align-self-center p-2">
+                                <p class="mb-0 text-muted">Flowers?</p>
+                                <p class="mb-0">No</p>
                             </div>
                         </div>
                     <% } %>
+                    <div class="col">
+                        <div class="border rounded align-self-center p-2">
+                            <p class="mb-0 text-muted">Sun Exposure</p>
+                            <p class="mb-0"><%= plant.sun_exposure %></p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border rounded align-self-center p-2">
+                            <p class="mb-0 text-muted">Seeds/Fruit?</p>
+                            <p class="mb-0"><%= plant.seeds_or_fruit ? 'Yes' : 'No' %></p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="border rounded align-self-center p-2">
+                            <p class="mb-0 text-muted">Leaves?</p>
+                            <p class="mb-0"><%= plant.leaves ? 'Yes' : 'No' %></p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="card-footer">
-                    <p class="card-text mb-0"><span class="text-muted">Posted by</span> <%= plant.user %></p>
-                    <p class="card-text">
-                        <span class="text-muted">Plant seen on</span>
-                        <%= new Date(plant.date_time_of_sighting).toLocaleDateString() %>
-                        <span class="text-muted">at</span>
-                        <%= new Date(plant.date_time_of_sighting).toLocaleTimeString() %>
-                    </p>
-                </div>
+                <% if (!plant.identification_complete) { %>
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#suggestName">
+                        Suggest Name
+                    </button>
+
+                    <div class="modal fade" id="suggestName" tabindex="-1" aria-labelledby="Suggest a name" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5">Suggest A Name</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+
+                                <form action="/suggest-name" method="post">
+                                    <div class="modal-body">
+                                        <input type="hidden" name="plantID" id="plantID" value="<%= plant._id %>">
+
+                                        <input type="text" class="form-control" name="suggestedName" id="suggestedName" placeholder="e.g. Rose" required>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#viewSuggestions" id="viewSuggestionsButton">View Suggestions</button>
+
+                    <div class="modal fade" id="viewSuggestions" tabindex="-1" aria-labelledby="View suggestions" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5">View Suggestions</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <% if (plant.suggested_names.length > 0) { %>
+                                        <% plant.suggested_names.forEach(suggestion => { %>
+                                            <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                                <p class="mb-0">
+                                                    <strong><%= suggestion.username %>:</strong>
+                                                    <span><%= suggestion.suggestedName %></span>
+                                                </p>
+
+                                                <% if (suggestion.suggestedName != plant.name) { %>
+                                                    <form action="/approve-suggestion" method="post">
+                                                        <input type="hidden" name="plantID" value="<%= plant._id %>">
+                                                        <input type="hidden" name="suggestedName" value="<%= suggestion.suggestedName %>">
+                                                        <button type="submit" class="btn btn-success">Approve</button>
+                                                    </form>
+                                                <% } %>
+                                            </div>
+                                        <% }) %>
+                                    <% } else { %>
+                                            <p>No suggestions yet</p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+
+            <div class="card-footer">
+                <p class="card-text mb-0"><span class="text-muted">Posted by</span> <%= plant.user %></p>
+                <p class="card-text">
+                    <span class="text-muted">Plant seen on</span>
+                    <%= new Date(plant.date_time_of_sighting).toLocaleDateString() %>
+                    <span class="text-muted">at</span>
+                    <%= new Date(plant.date_time_of_sighting).toLocaleTimeString() %>
+                </p>
             </div>
         </div>
+    </div>
 
-        <div class="col">
-            <div class="d-flex flex-column justify-content-between gap-2 border rounded" style="height: 80dvh;">
-                <div class="d-flex flex-column-reverse overflow-auto p-2" style="scrollbar-width: thin;">
-                    <div class="flex-grow-1" id="history">
-                    </div>
-                    <!-- ==== FORM FOR UPLOADING HISTORY WHEN PAGE LEFT -->
-                    <form id="uploadHistory" class="d-none" action="/changeChat" method="post">
-                        <input type="text" name="plantID" id="plantID" value=<%= plant._id %>>
-                        <input type="text" id="historyChat" name="historyChat">
-                    </form>
-                </div>  
-
-                <div>
-                    <!-- FORM FOR SENDING CHAT TEXT -->
-                    <form onsubmit="return false" class="d-flex gap-2 p-2">
-                        <input type="text" name="chat_input" id="chat_input" placeholder="Send a message" class="form-control" required>
-                        <button class="btn btn-primary" onclick="sendChatText()">Send</button>
-                    </form>
+    <div class="col">
+        <div class="d-flex flex-column justify-content-between gap-2 border rounded" style="height: 80dvh;">
+            <div class="d-flex flex-column-reverse overflow-auto p-2" style="scrollbar-width: thin;">
+                <div class="flex-grow-1" id="history">
                 </div>
+                <!-- ==== FORM FOR UPLOADING HISTORY WHEN PAGE LEFT -->
+                <form id="uploadHistory" class="d-none" action="/changeChat" method="post">
+                    <input type="text" name="plantID" id="plantID" value=<%= plant._id %>>
+                    <input type="text" id="historyChat" name="historyChat">
+                </form>
+            </div>  
+
+            <div>
+                <!-- FORM FOR SENDING CHAT TEXT -->
+                <form onsubmit="return false" class="d-flex gap-2 p-2">
+                    <input type="text" name="chat_input" id="chat_input" placeholder="Send a message" class="form-control" required>
+                    <button class="btn btn-primary" onclick="sendChatText()">Send</button>
+                </form>
             </div>
         </div>
     </div>
@@ -170,19 +175,13 @@
 
 <script>
     if ("<%= plant.identification_complete%>" === "false") {
-        document.getElementById("suggest-name").onclick = () => document.querySelector(".overlay").style.display = "block";
-        document.getElementById("close-suggest-name").onclick = () => document.querySelector(".overlay").style.display = "none";
-        
         getCurrentUser().then(name => {
             if (name === "<%- plant.user %>") {
-                document.getElementById("suggestion-panel").style.display = "block";
+                document.getElementById("viewSuggestionsButton").style.display = "inline-block";
             } else {
-                document.getElementById("suggestion-panel").style.display = "none";
+                document.getElementById("viewSuggestionsButton").style.display = "none";
             }
         })
-        
-        document.getElementById("view-suggestion").onclick = () => document.querySelector(".view-suggestion-overlay").style.display = "block";
-        document.getElementById("close-view-suggestions").onclick = () => document.querySelector(".view-suggestion-overlay").style.display = "none";
     }
 </script>
 
@@ -203,6 +202,7 @@
         navigator.sendBeacon('/changeChat', blob);
     };
 </script>
+
 <script src="/leaflet/leaflet.js"></script>
 <script>
     var map = L.map('map', {
@@ -224,7 +224,6 @@
 
     map.setView(['<%= plant.latitude %>', '<%= plant.longitude %>'], 15);
     L.marker(['<%= plant.latitude %>', '<%= plant.longitude %>']).addTo(map);
-
-
 </script>
+
 <%- include('./partials/footer.ejs') %>

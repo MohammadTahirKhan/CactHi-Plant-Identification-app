@@ -1,158 +1,169 @@
 <%- include('./partials/header.ejs') %>
-<div class="container">
-    <h1 class="mb-2">Create New Plant</h1>
-    <div class="card">
-        <div class="card-body">
-            <form action="new-plant-sighting" method="post" enctype="multipart/form-data" id="new-plant-form">
-                <div class="mb-2">
-                    <label for="user" class="form-label">Username</label>
-                    <input type="text" name="user" id="user" class="form-control" readonly required>
+
+<h1 class="mb-2">Create New Plant</h1>
+<div class="card">
+    <div class="card-body">
+        <form action="new-plant-sighting" method="post" enctype="multipart/form-data" id="new-plant-form">
+            <div class="mb-2">
+                <label for="user" class="form-label">Username</label>
+                <input type="text" name="user" id="user" class="form-control" readonly required>
+            </div>
+
+            <div class="mb-2">
+                <label for="name" class="form-label">Name of Plant</label>
+                <input type="text" name="name" id="name" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="date_time_of_sighting" class="form-label">Date and Time of Sighting</label>
+                <input type="datetime-local" name="date_time_of_sighting" id="date_time_of_sighting" class="form-control" required>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <p>Enter the location of the plant via one of the following methods:</p>
+                    <ul>
+                        <li>Select a point on the map,</li>
+                        <li>Enter coordinates manually</li>
+                    </ul>
+                    <p>Or</p>
+                    <button id="use-cur-location" class="btn btn-success mb-2" type="button">📍Use your current location</button>
+
+                    <div class="mb-2">
+                        <label for="latitude" class="form-label">Latitude</label>
+                        <input type="number" name="latitude" id="latitude" class="form-control" step="any" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label for="longitude" class="form-label">Longitude</label>
+                        <input type="number" name="longitude" id="longitude" class="form-control" step="any" required>
+                    </div>
                 </div>
 
-                <div class="mb-2">
-                    <label for="name" class="form-label">Name of Plant</label>
-                    <input type="text" name="name" id="name" class="form-control" required>
+                <div class="col">
+                    <div id="map" style="height: 100%; min-height: 20rem;"></div>
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="description" id="description" class="form-control" required></textarea>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-lg-6">
+                    <label for="height" class="form-label">Height of Plant</label>
+                    <select name="height" id="height" class="form-select" required>
+                        <option>0-15cm</option>
+                        <option>15-30cm</option>
+                        <option>30-60cm</option>
+                        <option>60-100cm</option>
+                        <option>100cm+</option>
+                    </select>
                 </div>
 
-                <div class="mb-3">
-                    <label for="date_time_of_sighting" class="form-label">Date and Time of Sighting</label>
-                    <input type="datetime-local" name="date_time_of_sighting" id="date_time_of_sighting" class="form-control" required>
+                <div class="col">
+                    <label for="spread" class="form-label">Spread of Plant</label>
+                    <select name="spread" id="spread" class="form-select" required>
+                        <option>0-15cm</option>
+                        <option>15-30cm</option>
+                        <option>30-60cm</option>
+                        <option>60-100cm</option>
+                        <option>100cm+</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-lg-6">
+                    <label for="flowers" class="form-label">Did the plant have flowers?</label>
+                    <select name="flowers" id="flowers" class="form-select" required>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
                 </div>
 
-                <div class="row mb-2">
-                    <div class="col-lg-4">
-                        <p>Enter the location of the plant via one of the following methods:</p>
-                        <ul>
-                            <li>Select a point on the map,</li>
-                            <li>Enter coordinates manually</li>
-                        </ul>
-                        <p>Or</p>
-                        <button id="use-cur-location" class="btn btn-success mb-2" type="button">📍Use your current location</button>
+                <div class="col">
+                    <label for="flower_colour" class="form-label">If so, what colour were the flowers?</label>
+                    <input type="text" name="flower_colour" id="flower_colour" class="form-control" required>
+                </div>
+            </div>
 
-                        <div class="mb-2">
-                            <label for="latitude" class="form-label">Latitude</label>
-                            <input type="number" name="latitude" id="latitude" class="form-control" step="any" required>
+            <div class="row mb-2">
+                <div class="col-lg-6">
+                    <label for="leaves" class="form-label">Did the plant have leaves?</label>
+                    <select name="leaves" id="leaves" class="form-select" required>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+
+                <div class="col">
+                    <label for="fruits_or_seeds" class="form-label">Were there visible seeds or fruit?</label>
+                    <select name="fruits_or_seeds" id="fruits_or_seeds" class="form-select" required>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-lg-6">
+                    <label for="sun_exposure" class="form-label">What was the level of sun exposure in the area?</label>
+                    <select name="sun_exposure" id="sun_exposure" class="form-select" required>
+                        <option>Full Shade</option>
+                        <option>Partial Shade</option>
+                        <option>Full Sun</option>
+                    </select>
+                </div>
+
+                <div class="col">
+                    <label for="image" class="form-label">Photo of plant</label>
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <input type="hidden" name="webcam" id="cam-input">
+                            <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
                         </div>
 
-                        <div class="mb-2">
-                            <label for="longitude" class="form-label">Longitude</label>
-                            <input type="number" name="longitude" id="longitude" class="form-control" step="any" required>
+                        <div class="col">
+                            <button id="useWebcamButton" type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#useWebcam">
+                                📸 Use camera
+                            </button>
                         </div>
                     </div>
-
-                    <div class="col">
-                        <div id="map" style="height: 100%; min-height: 20rem;"></div>
-                    </div>
                 </div>
-
-                <div class="mb-2">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea name="description" id="description" class="form-control" required></textarea>
-                </div>
-
-                <div class="row mb-2">
-                    <div class="col-lg-6">
-                        <label for="height" class="form-label">Height of Plant</label>
-                        <select name="height" id="height" class="form-select" required>
-                            <option>0-15cm</option>
-                            <option>15-30cm</option>
-                            <option>30-60cm</option>
-                            <option>60-100cm</option>
-                            <option>100cm+</option>
-                        </select>
-                    </div>
-
-                    <div class="col">
-                        <label for="spread" class="form-label">Spread of Plant</label>
-                        <select name="spread" id="spread" class="form-select" required>
-                            <option>0-15cm</option>
-                            <option>15-30cm</option>
-                            <option>30-60cm</option>
-                            <option>60-100cm</option>
-                            <option>100cm+</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row mb-2">
-                    <div class="col-lg-6">
-                        <label for="flowers" class="form-label">Did the plant have flowers?</label>
-                        <select name="flowers" id="flowers" class="form-select" required>
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
-                        </select>
-                    </div>
-    
-                    <div class="col">
-                        <label for="flower_colour" class="form-label">If so, what colour were the flowers?</label>
-                        <input type="text" name="flower_colour" id="flower_colour" class="form-control" required>
-                    </div>
-                </div>
-
-                <div class="row mb-2">
-                    <div class="col-lg-6">
-                        <label for="leaves" class="form-label">Did the plant have leaves?</label>
-                        <select name="leaves" id="leaves" class="form-select" required>
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
-                        </select>
-                    </div>
-
-                    <div class="col">
-                        <label for="fruits_or_seeds" class="form-label">Were there visible seeds or fruit?</label>
-                        <select name="fruits_or_seeds" id="fruits_or_seeds" class="form-select" required>
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="row mb-4">
-                    <div class="col-lg-6">
-                        <label for="sun_exposure" class="form-label">What was the level of sun exposure in the area?</label>
-                        <select name="sun_exposure" id="sun_exposure" class="form-select" required>
-                            <option>Full Shade</option>
-                            <option>Partial Shade</option>
-                            <option>Full Sun</option>
-                        </select>
-                    </div>
-
-                    <div class="col">
-                        <label for="image" class="form-label">Photo of plant</label>
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <input type="hidden" name="webcam" id="cam-input">
-                                <input type="file" name="image" id="image" class="form-control" accept="image/*" required>
+                
+                <div class="modal fade" id="useWebcam" tabindex="-1" aria-labelledby="Use webcam" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5">Use Your Camera</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
-                            <div class="col">
-                                <button id="cam-overlay" class="btn btn-success w-100">📸 Use camera</button>
+                            <div class="modal-body">
+                                <video id="webcam" class="w-100" autoplay></video>
+                                <canvas id="canvas" class="d-none"></canvas>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="overlay">
-                        <div class="overlay-card card" style="width: 40rem; max-width: 95dvw;">
-                            <div class="card-header">
-                                <button id="close-cam-overlay" type="button" class="btn-close" aria-label="Close"></button>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button id="capture" type="button" class="btn btn-primary">Take Picture</button>
                             </div>
-                            
-                            <video id="webcam" autoplay></video>
-                            <button id="capture" class="btn btn-success">Capture</button>
-                            <canvas id="canvas" style="display: none;"></canvas>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <button type="submit" class="btn btn-primary">Submit Plant</button>
-            </form>
-        </div>
+            <button type="submit" class="btn btn-primary">Submit Plant</button>
+        </form>
     </div>
 </div>
 
 <script src="/leaflet/leaflet.js"></script>
 <script src="./javascripts/map.js"></script>
 <script src="./javascripts/new-plant.js"></script>
+
 <script>
     const hasFlowers = document.getElementById('flowers');
     const flowerColour = document.getElementById('flower_colour');
@@ -169,9 +180,8 @@
 <script>
     const video = document.getElementById('webcam');
     const canvas = document.getElementById('canvas');
-    const captureButton = document.getElementById('capture');
 
-    document.getElementById("cam-overlay").onclick = () => {
+    document.getElementById("useWebcamButton").onclick = () => {
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function(stream) {
@@ -179,19 +189,19 @@
                     video.play();
                 });
         }
-        document.querySelector(".overlay").style.display = "block";
     }
-        
-    document.getElementById("close-cam-overlay").onclick = () => document.querySelector(".overlay").style.display = "none";
 
-    captureButton.addEventListener('click', function(e) {
+    document.getElementById('capture').onclick = (e) => {
         e.preventDefault();
         document.getElementById('image').disabled = true;
         video.pause();
+        
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         canvas.getContext('2d').drawImage(video, 0, 0);
+
         document.getElementById("cam-input").value = canvas.toDataURL('image/png');
-    });
+    };
 </script>
+
 <%- include('./partials/footer.ejs') %>

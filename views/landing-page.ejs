@@ -1,56 +1,42 @@
-
 <%- include('./partials/header.ejs') %>
 
-<h1 style= "text-align: center;"><b>Welcome to PLANT ID SYSTEM NAME</b></h1>
-<div class="d-flex flex-row">
-    <div class="p-2" style="width: 33%;height:100%;">
-        <div class="card" style=" margin:1%;">
-            <img src="/images/cactusfriend.png" class="float-left" style="height: auto;">
+<div class="text-center mb-4">
+    <h1>Welcome to [NAME]</h1>
+    <img src="/images/cactusfriend.png" alt="Logo of the system" class="img-fluid w-25">
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body d-flex flex-column justify-content-between">
+                <h2 class="card-title">Got a plant to identify?</h2>
+                <p class="card-text">Click on 'New Plant' to upload your own plant, and allow other people to help you figure out its name! You'll need a few pieces of information including:</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Location you found the plant</li>
+                    <li class="list-group-item">Details about the plant - did it have flowers? How big was it?</li>
+                    <li class="list-group-item">When you saw the plant</li>
+                </ul>
+
+                <a class="btn btn-success mt-2" href="/new-plant-sighting">Add a new plant!</a>
+            </div>
         </div>
     </div>
-    <div class="p-2">
-        <div class="card" style="margin:1%; height:100%; ">
+
+    <div class="col-lg-6">
+        <div class="card">
             <div class="card-body">
-                <h5 class="card-title" style="font-size: 2em;">Got a plant to identify?</h5>
-                <p class="card-text" >Click on 'New Plant' to upload your own plant, and allow other people to help you figure out its name! You'll need a few pieces of information including:</p>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Location you found the plant</li>
-                <li class="list-group-item">Details about the plant - did it have flowers? How big was it?</li>
-                <li class="list-group-item">When you saw the plant</li>
-            </ul>
-            <div class="card-body text-center" style="
-                height: 5rem;
-                display: grid;
-                place-items: center;">
-
-                <a href="/new-plant-sighting/" >
-                    <button type="button" class="btn btn-success btn-lg">Add a new plant!</button>
-                </a>
-            </div>
-
-        </div>
-
-    </div>
-    <div class="p-2">    <div class="card" style="margin:1%; height:100%;">
-            <div class="card-body">
-                <h5 class="card-title" style="font-size: 2em;">Want to help other people identify their own plants?</h5>
+                <h2 class="card-title">Want to help other people identify their own plants?</h2>
                 <p class="card-text">You can try offering your skills to other people, and help them figure out the names of plants they've seen too! Why not try:</p>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Suggesting names for uploaded plants!</li>
-                <li class="list-group-item">Chatting about your thoughts on the plant and its name</li>
-                <li class="list-group-item">Searching for plants in your local area!</li>
-            </ul>
-            <div class="card-body text-center" style="
-                height: 5rem;
-                display: grid;
-                place-items: center;">
-                <a href="/view-plants/" >
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Suggesting names for uploaded plants!</li>
+                    <li class="list-group-item">Chatting about your thoughts on the plant and its name</li>
+                    <li class="list-group-item">Searching for plants in your local area!</li>
+                </ul>
 
-                <button type="button" class="btn btn-success btn-lg"> Help other people name their plants!</button>
-                </a></div>
-        </div></div>
+                <a class="btn btn-success mt-2 d-block" href="/view-plants">Help other people!</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <%- include('./partials/footer.ejs') %>
