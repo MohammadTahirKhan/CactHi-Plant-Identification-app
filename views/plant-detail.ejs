@@ -174,13 +174,10 @@
 </div>
 
 <script>
-    getCurrentUser().then((username) => {
-        document.querySelector('input[name="user"]').value = username;
-    });
-</script>
-<script>
     if ("<%= plant.identification_complete%>" === "false") {
         getCurrentUser().then(name => {
+            document.querySelector('input[name="user"]').value = name;
+
             if (name === "<%- plant.user %>") {
                 document.getElementById("viewSuggestionsButton").style.display = "inline-block";
             } else {
