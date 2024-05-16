@@ -1,109 +1,46 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="en">
 <head>
-
-    <title><%= title %></title>
-    <link rel="stylesheet" href="./css/bootstrap.min.css">.
-    <script src="/javascripts/idb-utils.js"></script>
-    <script src="/javascripts/index.js"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <script src="/javascripts/idb-utils.js"></script>
+  <script src="/javascripts/index.js"></script>
 </head>
+<body class="landing-bg">
+  <main class="h-100 d-flex flex-column justify-content-center gap-2 p-4 px-lg-5 ">
+    <h1 class="display-2">Welcome to cactHi!</h1>
+    <button type="button" class="btn btn-lg btn-outline-dark align-self-start mb-5" id="showLogin">Submit Plants</button>
 
-<body class="bck" style="
-background-image: url(./images/landing-background.png);
-  /* Full height */
-  height: 100%;
-  /* Center and scale the image nicely */
-  background-repeat: no-repeat;
-  background-size: cover;
- z-index: 1;">
-
-<p style="  position: absolute;
-  top: 40%;
-  left: 20%;
-  transform: translate(-50%, -50%);
-  font-size: 50px;
-  height:10%;
-  width:20%;
-
-">[site name]</p>
-<button type="button" class="btn btn-outline-dark" onclick="showLogin()" style="  position: absolute;
-  top: 50%;
-  left: 20%;
-  transform: translate(-50%, -50%);
-  font-size: 20px;
-  height:10%;
-  width:20%;
-"><b>Submit Plants</b></button>
-
-<script>
-    function showLogin() {
-        document.getElementById("overlay").style.width = "100%";
-        document.getElementById("main").style.marginLeft = "100%";
-        document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-    }
-    function hideLogin() {
-        document.getElementById("overlay").style.width = "0%";
-        document.getElementById("main").style.marginLeft = "0%";
-        document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
-    }
-
-</script>
-<div id="overlay" class="overlay" style=" height: 100%;
-  width: 0;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: rgba(0,0,0,.5);
-  overflow-x: hidden;
-  padding-top: 60px;
-  transition: 0.5s;">
-        <form action="/landing-page" id="username-form">
-        <div class="form-group" style="padding-bottom: 10px">
-            <input type="text"  class="form-control"  placeholder="Username..." name="username" style="
-           margin: 0;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 20%;
-          font-size:20px;
-          -ms-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);">
+    <div class="overlay">
+      <form id="username-form" class="h-100 p-4 align-self-center d-flex flex-column mx-auto justify-content-center gap-4">
+        <div class="form-floating">
+          <input type="text" name="username" class="form-control" id="floatingInput" placeholder="Username" required>
+          <label for="floatingInput">Username</label>
         </div>
-        <button type="submit" onclick="hideLogin()" class="btn btn-outline-light"  class="text-center" style= " margin: 0;
-          position: absolute;
-          top: 60%;
-          left: 50%;
-          width: 5%;
-          height: 5%;
-          -ms-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
-            </svg>
-        </button></form>
 
+        <button class="btn btn-outline-light" type="submit">➤</button>
+      </form>
+    </div>
+  </main>
 
-    <button type="button" onclick="hideLogin()" class="btn btn-outline-light" style="
-    position: absolute;
-    right:    5%;
-    bottom:   5%;
-          ">Go Back
-    </button>
-</div>
+  <script>
+    document.getElementById('showLogin').addEventListener('click', () => {
+        document.querySelector('.overlay').style.width = '100%';
+    });
 
-<script>
-  const form = document.getElementById('username-form');
-  form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const username = form.username.value;
-
-      addData('username', { username: username }).then(() => {
-          console.log('Added username to IndexedDB');
-          window.location.href = '/view-plants';
-      });
-  });
-</script>
-
+    const form = document.getElementById('username-form');
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const username = form.username.value;
+  
+        addData('username', { username: username }).then(() => {
+            console.log('Added username to IndexedDB');
+            window.location.href = '/landing-page';
+        });
+    });
+  </script>
 </body>
 </html>
