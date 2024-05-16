@@ -1,6 +1,5 @@
-# com3504
-For Intelligent Web
-# com3504 The Intelligent Web Assignment: CactHi
+# com3504 The Intelligent Web Assignment
+#  CactHi
 
 ## Team Members
 1. Ethan Watts
@@ -14,6 +13,7 @@ This repository contains the code for the Intelligent Web Assignment for the COM
 ## Dependencies
 * Node.JS
 * MongoDB
+* Bootstrap
 * Standard Node Modules
 
 ## Installation
