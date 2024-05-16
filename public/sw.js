@@ -12,7 +12,7 @@ self.addEventListener("install", (event) => {
                     "/landing-page",
                     "/view-plants",
                     "/new-plant-sighting",
-                    '/offline-detail',
+                    "/offline-detail",
 
                     "/manifest.json",
                     "/stylesheets/style.css",
@@ -58,21 +58,21 @@ self.addEventListener("fetch", (event) => {
 
     // Skip fetch for uploaded images
     if (!navigator.onLine && url.pathname.startsWith("/images/uploads")) {
-        event.respondWith(new Response('', { status: 200 }));
+        event.respondWith(new Response("", { status: 200 }));
         return;
     }
 
     event.respondWith(
         (async () => {
             try {
-                const networkResponse = await fetch(event.request)
+                const networkResponse = await fetch(event.request);
                 return networkResponse;
             } catch (error) {
                 const cache = await caches.open("static");
                 // Remove the search query from the URL to match the cache
                 url.search = "";
 
-                const cachedResponse = await cache.match(url.toString(), { ignoreSearch: true });    
+                const cachedResponse = await cache.match(url.toString(), { ignoreSearch: true });
                 if (cachedResponse) {
                     return cachedResponse;
                 }
@@ -80,7 +80,7 @@ self.addEventListener("fetch", (event) => {
                 throw error;
             }
         })()
-    )
+    );
 });
 
 /**
@@ -105,7 +105,7 @@ const syncPlant = async (plant) => {
     } else {
         console.error("[SW] Error syncing plant:", response.statusText);
     }
-}
+};
 
 /**
  * Sends a chat to the server to be synced.
@@ -120,8 +120,8 @@ const syncChat = async (chat) => {
         method: "POST",
         body: data,
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
     });
 
     if (response.ok) {
@@ -130,9 +130,10 @@ const syncChat = async (chat) => {
     } else {
         console.error("[SW] Error syncing chat:", response.statusText);
     }
-}
+};
 
 self.addEventListener("sync", (event) => {
+    // Uploading newly created plants while offline to the server
     if (event.tag === "sync-plants") {
         console.log("[SW] Uploading plants to server");
         event.waitUntil(
@@ -143,6 +144,7 @@ self.addEventListener("sync", (event) => {
         );
     }
 
+    // Uploading chat messages while offline to the server
     if (event.tag === "sync-chats") {
         console.log("[SW] Uploading chat messages to server");
         event.waitUntil(

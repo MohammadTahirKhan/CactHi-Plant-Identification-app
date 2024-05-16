@@ -3,7 +3,6 @@
  * Handles registration of the service worker and populating the navbar with the current user's username.
  */
 
-
 /**
  * Registers the service worker.
  */
@@ -29,8 +28,8 @@ const registerSW = async () => {
 window.onload = () => {
     registerSW();
 
-    // If the user is not on the landing page, populate the navbar with the current user's username.
-    // If a username is not found, redirect the user to the landing page to add one.
+    // If the user is not on the index page, populate the navbar with the current user's username.
+    // If a username is not found, redirect the user to the index page to add one.
 
     getCurrentUser()
         .then((username) => {

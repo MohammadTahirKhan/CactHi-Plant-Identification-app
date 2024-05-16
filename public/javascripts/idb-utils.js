@@ -2,7 +2,6 @@
  * Contains utility functions for interacting with IndexedDB.
  */
 
-
 /**
  * Opens the specified IndexedDB store in the specified mode.
  * @param {string} storeName - One of: plants, sync-queue, username

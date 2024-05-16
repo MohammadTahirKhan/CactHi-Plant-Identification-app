@@ -2,7 +2,6 @@
  * Controls the view-all-plants page.
  */
 
-
 /**
  * Creates a card for a plant to display on the page.
  * @param {Object} plant - Plant object to create a card for
@@ -13,13 +12,17 @@ const createPlantCard = (plant) => {
     const plantCard = document.getElementById("plant-card");
 
     plantCard.innerHTML = `
-        <img class="card-img-top object-fit-cover" src="${URL.createObjectURL(plant.image)}" alt="Picture of ${plant.name}"/>
+        <img class="card-img-top object-fit-cover" src="${URL.createObjectURL(
+            plant.image
+        )}" alt="Picture of ${plant.name}"/>
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
                 <h4 class="card-title">${plant.name}</h4>
             </div>
                 
-            <h6 class="card-subtitle text-muted mb-2">${plant.latitude}&deg; N, ${plant.longitude}&deg; W</h6>
+            <h6 class="card-subtitle text-muted mb-2">${plant.latitude}&deg; N, ${
+        plant.longitude
+    }&deg; W</h6>
             <p class="card-text">${plant.description}</p>
                 
             <div class="row row-cols-2 row-cols-lg-3 text-center g-2 mb-4">
@@ -50,13 +53,13 @@ const createPlantCard = (plant) => {
                 <div class="col">
                     <div class="border rounded align-self-center p-2">
                         <p class="mb-0 text-muted">Seeds/Fruit?</p>
-                        <p class="mb-0">${plant.seeds_or_fruit ? 'Yes' : 'No'}</p>
+                        <p class="mb-0">${plant.seeds_or_fruit ? "Yes" : "No"}</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="border rounded align-self-center p-2">
                         <p class="mb-0 text-muted">Leaves?</p>
-                        <p class="mb-0">${plant.leaves ? 'Yes' : 'No'}</p>
+                        <p class="mb-0">${plant.leaves ? "Yes" : "No"}</p>
                     </div>
                 </div>
             </div>
@@ -76,19 +79,28 @@ const createPlantCard = (plant) => {
     return plantCard;
 };
 
+/**
+ * Offline version of sending a chat message.
+ * Writes the message to the chat history and updates the chat history in the database.
+ */
 const sendChatText = async () => {
     const chatInput = document.getElementById("chat_input");
     if (!chatInput.value) return;
 
-    writeOnHistory(username, chatInput.value);    
+    writeOnHistory(username, chatInput.value);
     await updateChat(plantObj._id, `${username}|${chatInput.value}||`);
-    
-    chatInput.value = '';
-}
 
+    chatInput.value = "";
+};
+
+/**
+ * Writes a message to the chat history.
+ * @param {string} user - name of the user who sent the message
+ * @param {*} message - message sent by the user
+ */
 const writeOnHistory = (user, message) => {
-    const history = document.getElementById('history');
-    const newMessage = document.createElement('p');
+    const history = document.getElementById("history");
+    const newMessage = document.createElement("p");
 
     if (user === username) {
         newMessage.className = "current-user-message";
@@ -98,7 +110,7 @@ const writeOnHistory = (user, message) => {
     }
 
     history.appendChild(newMessage);
-}
+};
 
 const params = new URLSearchParams(window.location.search);
 var username = null;
@@ -108,14 +120,18 @@ getCurrentUser().then((user) => {
     username = user;
 });
 
-getPlant(params.get('id')).then((plant) => {
+/**
+ * Creates a card for the plant to display on the page.
+ * Also populates the chat history if it exists.
+ */
+getPlant(params.get("id")).then((plant) => {
     plantObj = plant;
     createPlantCard(plantObj);
 
     if (plantObj.chat) {
-        const messages = plantObj.chat.split('||');
-        messages.forEach(message => {
-            const [user, text] = message.split('|');
+        const messages = plantObj.chat.split("||");
+        messages.forEach((message) => {
+            const [user, text] = message.split("|");
             if (user && text) {
                 writeOnHistory(user, text);
             }

@@ -1,16 +1,16 @@
 {
-  "lang": "en",
-  "name": "Plant Identification",
-  "description": "Identify plants from images",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#fff",
-  "theme_color": "#fff",
-  "orientation": "any",
-  "icons": [
-    {
-      "src": "/images/cactusfriend.png",
-      "sizes": "192x192"
-    }
-  ]
+    "lang": "en",
+    "name": "cactHi",
+    "description": "Identify plants from images",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#fff",
+    "theme_color": "#fff",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "/images/cactusfriend.png",
+            "sizes": "192x192"
+        }
+    ]
 }

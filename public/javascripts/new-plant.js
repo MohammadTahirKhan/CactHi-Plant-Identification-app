@@ -2,7 +2,6 @@
  * Controls the new-plant page.
  */
 
-
 // Populates the user field with the current user's username
 getCurrentUser().then((username) => {
     document.querySelector('input[name="user"]').value = username;
@@ -18,6 +17,7 @@ form.onsubmit = (event) => {
         plant[key] = value;
     });
 
+    // If the user is online, send the form data to the server
     if (navigator.onLine) {
         fetch("/new-plant-sighting", {
             method: "POST",
@@ -31,7 +31,8 @@ form.onsubmit = (event) => {
                 });
             }
         });
-        
+
+        // If the user is offline, add the plant to the sync queue
     } else {
         addPlantToSyncQueue(plant).then(() => {
             setTimeout(() => {

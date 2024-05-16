@@ -8,7 +8,7 @@ const socketIo = require('socket.io');
 
 var indexRouter = require('./routes/index');
 var newPlantRouter = require('./routes/new-plant-sighting');
-var landingPageRouter = require('./routes/landing-page');
+var plantDetailRouter = require('./routes/plant-detail');
 
 var app = express();
 
@@ -29,7 +29,8 @@ app.use('/public/images/uploads', express.static(path.join(__dirname, '/public/i
 
 app.use('/', indexRouter);
 app.use('/new-plant-sighting', newPlantRouter);
-app.use('/landing-page', landingPageRouter);
+app.use('/', plantDetailRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
